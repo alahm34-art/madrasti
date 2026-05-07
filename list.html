@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>متجر مؤشرات - مهام مدير المدرسة</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Cairo:wght@400;600;700;800&family=Noto+Kufi+Arabic:wght@400;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--green:#07A869;--blue:#3D7EB9;--teal:#0DA9A6;--dark:#15445A;--gold:#C1B48A}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Tajawal",sans-serif;background:#eef1f5;color:#1a2a35;min-height:100vh;display:flex;flex-direction:column}
+.app-header{background:linear-gradient(135deg,#15445A,#0DA9A6);color:white;padding:13px 24px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,.2);flex-shrink:0}
+.app-header .logo{font-size:19px;font-weight:800}
+.app-header .sub{font-size:11px;opacity:.7}
+.screen{display:none;flex:1;flex-direction:column}
+.screen.active{display:flex;flex-direction:column}
+#screen-editor.active{display:flex;flex-direction:row;height:calc(100vh - 52px);overflow:hidden}
+.home-wrap{max-width:960px;margin:0 auto;padding:28px 20px;width:100%;flex:1}
+.home-title{text-align:center;font-size:24px;font-weight:800;color:var(--dark);margin-bottom:5px}
+.home-sub{text-align:center;color:#777;margin-bottom:22px;font-size:13px}
+.saved-sec{background:white;border-radius:14px;padding:16px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.saved-hd{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:10px}
+.saved-list{display:flex;flex-direction:column;gap:6px}
+.saved-empty{font-size:12px;color:#aaa;text-align:center;padding:10px}
+.saved-item{display:flex;align-items:center;gap:10px;padding:9px 13px;background:#f7f9fb;border-radius:9px;border:1.5px solid #e8e8e8}
+.saved-item:hover{border-color:var(--teal);background:#f0fafa}
+.si-icon{font-size:18px}.si-info{flex:1}.si-name{font-size:13px;font-weight:700;color:var(--dark)}.si-date{font-size:11px;color:#999}
+.si-actions{display:flex;gap:6px}
+.si-btn{padding:4px 10px;border-radius:6px;border:none;cursor:pointer;font-family:"Tajawal",sans-serif;font-size:11px;font-weight:600}
+.si-open{background:var(--teal);color:white}.si-del{background:#fee;color:#c44}
+.sec-lbl{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:10px}
+.jobs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:11px;margin-bottom:18px}
+.job-card{background:white;border-radius:13px;padding:18px 14px;cursor:pointer;border:2px solid transparent;transition:all .2s;box-shadow:0 2px 6px rgba(0,0,0,.06);text-align:center}
+.job-card:hover{border-color:var(--teal);transform:translateY(-3px);box-shadow:0 8px 20px rgba(13,169,166,.15)}
+.job-icon{font-size:30px;margin-bottom:7px}.job-name{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:2px}.job-desc{font-size:10px;color:#aaa}
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-bottom:18px}
+.tpl-card{background:white;border-radius:11px;padding:14px 12px;cursor:pointer;border:2px solid transparent;transition:all .2s;box-shadow:0 2px 6px rgba(0,0,0,.06);text-align:center}
+.tpl-card:hover{border-color:var(--green);transform:translateY(-2px)}
+.tpl-icon{font-size:24px;margin-bottom:5px}.tpl-name{font-size:11px;font-weight:700;color:var(--dark)}
+.free-btn{display:block;width:100%;padding:14px;background:linear-gradient(135deg,#3D7EB9,#0DA9A6,#07A869);color:white;border:none;border-radius:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:"Tajawal",sans-serif}
+.home-footer{text-align:center;padding:13px;font-size:11px;color:#aaa;border-top:1px solid #e0e0e0;background:white;margin-top:auto}
+.home-footer span{color:var(--teal);font-weight:700}
+.sel-wrap{max-width:700px;margin:0 auto;padding:22px 20px;width:100%}
+.back-btn{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:600;margin-bottom:16px;padding:6px 13px;background:white;border-radius:7px;border:none;font-family:"Tajawal",sans-serif;box-shadow:0 1px 4px rgba(0,0,0,.1);color:var(--dark)}
+.sel-title{font-size:18px;font-weight:800;color:var(--dark);margin-bottom:13px}
+.gender-box{background:white;border-radius:11px;padding:15px;margin-bottom:13px;box-shadow:0 1px 5px rgba(0,0,0,.06)}
+.gender-lbl{font-size:12px;font-weight:700;color:var(--dark);margin-bottom:8px}
+.g-btns{display:flex;gap:7px;flex-wrap:wrap}
+.g-btn{padding:6px 15px;border-radius:7px;border:2px solid #ddd;background:white;cursor:pointer;font-family:"Tajawal",sans-serif;font-size:12px;font-weight:600;color:#666}
+.g-btn.active{border-color:var(--teal);background:#e8f9f9;color:var(--dark)}
+.rpts-list{display:flex;flex-direction:column;gap:7px}
+.rpt-item{background:white;border-radius:11px;padding:12px 15px;cursor:pointer;border:2px solid transparent;transition:all .15s;display:flex;align-items:center;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.rpt-item:hover{border-color:var(--green);background:#f0faf5}
+.ri-ico{font-size:18px}.ri-nm{font-size:13px;font-weight:700;color:var(--dark)}.ri-ds{font-size:11px;color:#aaa}.ri-arr{margin-right:auto;color:var(--green);font-size:14px}
+.sidebar{width:350px;min-width:290px;background:white;border-left:1px solid #e5e5e5;display:flex;flex-direction:column;overflow:hidden}
+.sb-head{padding:11px 15px;background:var(--dark);color:white;display:flex;align-items:center;gap:8px}
+.sh-title{font-size:13px;font-weight:700}.sh-back{background:rgba(255,255,255,.15);border:none;color:white;padding:4px 10px;border-radius:5px;cursor:pointer;font-family:"Tajawal",sans-serif;font-size:11px;margin-right:auto}
+.sb-body{flex:1;overflow-y:auto;padding:11px}
+.sb-body::-webkit-scrollbar{width:3px}.sb-body::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
+.f-sec{margin-bottom:11px;background:#f7f8fb;border-radius:9px;padding:10px}
+.f-sec-title{font-size:10px;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid #e0e0e0}
+.f-grp{margin-bottom:7px}
+.f-lbl{font-size:11px;font-weight:600;color:#666;margin-bottom:3px;display:block}
+.f-inp,.f-ta{width:100%;padding:6px 9px;border:1.5px solid #e0e0e0;border-radius:6px;font-family:"Tajawal",sans-serif;font-size:12px;color:#333;background:white;outline:none}
+.f-inp:focus,.f-ta:focus{border-color:var(--teal)}
+.f-ta{resize:vertical;min-height:60px}
+.ig-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:4px}
+.ig-btn{padding:3px 9px;border-radius:5px;border:1.5px solid #ddd;background:white;cursor:pointer;font-family:"Tajawal",sans-serif;font-size:10px;font-weight:600;color:#666}
+.ig-btn.active{border-color:var(--teal);background:#e8f9f9;color:var(--dark)}
+.s-btns,.fnt-btns,.sz-btns{display:flex;gap:5px;flex-wrap:wrap}
+.s-btn,.fnt-btn,.sz-btn{padding:4px 10px;border-radius:6px;border:2px solid #ddd;background:white;cursor:pointer;font-family:"Tajawal",sans-serif;font-size:11px;font-weight:600;color:#666}
+.s-btn.active,.fnt-btn.active,.sz-btn.active{border-color:var(--green);background:#f0faf5;color:var(--dark)}
+.hdr-styles{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:5px}
+.hs-opt{border-radius:7px;overflow:hidden;cursor:pointer;border:2px solid transparent}
+.hs-opt.active{border-color:var(--green)}
+.hs-preview{height:25px;border-radius:4px}
+.hs-label{font-size:9px;text-align:center;color:#666;padding:2px;font-weight:600}
+.hdr-size-row{display:flex;gap:5px;margin-top:5px}
+.hs-size-btn{flex:1;padding:4px;border-radius:6px;border:2px solid #ddd;background:white;cursor:pointer;font-family:"Tajawal",sans-serif;font-size:10px;font-weight:700;text-align:center;color:#666}
+.hs-size-btn.active{border-color:var(--blue);background:#eaf2fb;color:var(--dark)}
+.sb-actions{padding:8px 11px;border-top:1px solid #eee;display:flex;flex-direction:column;gap:5px}
+.btn-save{padding:9px;background:var(--teal);color:white;border:none;border-radius:8px;font-family:"Tajawal",sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
+.btn-pdf{padding:9px;background:var(--dark);color:white;border:none;border-radius:8px;font-family:"Tajawal",sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
+.btn-addpage{padding:7px;background:#f0f4f8;color:var(--dark);border:2px dashed #aaa;border-radius:7px;font-family:"Tajawal",sans-serif;font-size:11px;font-weight:600;cursor:pointer}
+#screen-editor .preview-area{flex:1;background:#b8bec6;overflow-y:auto;padding:16px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.pg-toolbar{position:sticky;top:0;z-index:20;display:flex;justify-content:center;margin-bottom:3px}
+.pg-tb-inner{background:white;border-radius:9px;padding:5px 10px;display:flex;gap:6px;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.pt-btn{padding:4px 10px;border-radius:5px;border:1.5px solid #ddd;background:white;cursor:pointer;font-family:"Tajawal",sans-serif;font-size:10px;font-weight:600;color:#555}
+.pt-btn.active{border-color:var(--teal);background:#e8f9f9;color:var(--dark)}
+.pt-add{padding:4px 10px;border-radius:5px;border:none;background:var(--teal);cursor:pointer;font-family:"Tajawal",sans-serif;font-size:10px;font-weight:600;color:white}
+.a4-page{width:794px;background:white;box-shadow:0 4px 20px rgba(0,0,0,.18);border-radius:4px;overflow:hidden;direction:rtl;display:flex;flex-direction:column;min-height:1123px}
+.top-band,.bot-band{height:6px;flex-shrink:0}
+.pg-hdr{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;border-bottom:1.5px solid #eee}
+.ph-r{text-align:right}.ph-r p,.ph-l p{font-weight:700;line-height:1.7}
+.ph-c{text-align:center;padding:0 10px}
+.ph-c img{display:block;margin:0 auto}
+.ph-l{text-align:left}
+.rpt-title-box{margin:8px 28px;padding:7px 14px;border:2px solid var(--teal);border-radius:5px;text-align:center;font-size:14px;font-weight:800;color:#15445A}
+.info-row{display:grid;margin:0 28px 5px;gap:5px}
+.c3{grid-template-columns:repeat(3,1fr)}.c2{grid-template-columns:repeat(2,1fr)}
+.info-cell{border:1px solid #d0d0d0;border-radius:4px;overflow:hidden}
+.ic-lbl{background:linear-gradient(135deg,#15445A,#1d6080);color:white;font-size:9px;font-weight:700;padding:3px 8px;position:relative}
+.ic-lbl::after{content:"";position:absolute;bottom:0;right:0;left:0;height:2px;background:linear-gradient(90deg,#07A869,#0DA9A6)}
+.ic-val{padding:4px 8px;font-size:10.5px;font-weight:500;color:#333;min-height:22px}
+.page-content{flex:1;padding-bottom:8px}
+.c-row{margin:5px 28px;gap:5px;display:grid}
+.c-row.col1{grid-template-columns:1fr}
+.c-row.col2{grid-template-columns:1fr 1fr}
+.c-block{border:1px solid #d0d0d0;border-radius:6px;overflow:hidden;background:white;position:relative}
+.cb-head{background:#f8f9fa;color:#15445A;padding:5px 10px;font-size:10px;font-weight:700;position:relative;user-select:none;border-bottom:1px solid #e2e8f0}
+.cb-head::after{content:"";position:absolute;bottom:0;right:0;left:0;height:2px;background:linear-gradient(90deg,#07A869,#0DA9A6)}
+.cb-body{padding:8px 10px;line-height:1.9;color:#333;min-height:50px;outline:none}
+.cb-body:focus{background:#fafff8}
+.c-block img.block-img{width:100%;display:block;object-fit:cover}
+.c-block.dragging{opacity:.4}
+.c-block.drag-top{border-top:3px solid var(--teal)}
+.c-block.drag-bot{border-bottom:3px solid var(--teal)}
+.resize-h{position:absolute;bottom:0;left:0;right:0;height:5px;cursor:ns-resize}
+.resize-h:hover{background:rgba(13,169,166,.25)}
+.add-el-row{margin:5px 28px}
+.add-el-btn{width:100%;padding:8px;border:2px dashed var(--teal);border-radius:7px;background:#f0fafa;color:var(--teal);font-family:"Tajawal",sans-serif;font-size:11px;font-weight:700;cursor:pointer}
+.no-print{}
+.page-footer{padding:9px 28px;display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid #eee;flex-shrink:0}
+.footer-sig{text-align:center;font-size:9px;color:#555}
+.sig-line{width:100px;border-top:1px solid #aaa;margin:8px auto 3px}
+.sig-canvas-wrap{border:1px solid #ddd;border-radius:5px;overflow:hidden;margin-top:5px;background:white;position:relative}
+.sig-canvas-wrap canvas{display:block;touch-action:none}
+.sig-clear-btn{position:absolute;top:3px;left:3px;background:rgba(200,40,40,.8);color:white;border:none;border-radius:3px;padding:2px 6px;font-size:10px;cursor:pointer;font-family:"Tajawal",sans-serif}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal-box{background:white;border-radius:16px;padding:24px;max-width:460px;width:92%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.modal-icon{font-size:38px;margin-bottom:9px}
+.modal-title{font-size:17px;font-weight:800;color:var(--dark);margin-bottom:7px}
+.modal-text{font-size:13px;color:#666;line-height:1.7;margin-bottom:16px}
+.modal-btns{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.mbtn{padding:9px 20px;border-radius:9px;border:none;cursor:pointer;font-family:"Tajawal",sans-serif;font-size:13px;font-weight:700}
+.mbtn-dark{background:var(--dark);color:white}
+.mbtn-teal{background:var(--teal);color:white}
+.mbtn-gray{background:#f0f0f0;color:var(--dark)}
+.el-type-card{border:2px solid #e0e0e0;border-radius:11px;padding:14px;text-align:center;cursor:pointer;background:#fafafa}
+.el-type-card.active{border-color:var(--teal);background:#e8f9f9}
+.el-w-btn{flex:1;padding:7px;border-radius:7px;border:2px solid #ddd;background:white;cursor:pointer;font-family:"Tajawal",sans-serif;font-size:12px;font-weight:700;color:#666}
+.el-w-btn.active{border-color:var(--blue);background:#eaf2fb;color:var(--dark)}
+.up-area{border:2px dashed #ccc;border-radius:8px;padding:18px;text-align:center;cursor:pointer;background:#fafafa}
+.up-area input{display:none}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;align-items:center;justify-content:center}
+.overlay.active{display:flex}
+.ov-box{background:white;border-radius:14px;padding:24px;max-width:400px;width:90%;text-align:center}
+.ov-title{font-size:17px;font-weight:800;color:var(--dark);margin-bottom:5px}
+.ov-text{color:#777;font-size:12px;margin-bottom:12px}
+.spinner{display:block;width:28px;height:28px;border:3px solid rgba(0,0,0,.1);border-top-color:var(--dark);border-radius:50%;animation:spin .8s linear infinite;margin:10px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ov-close{padding:7px 20px;background:var(--dark);color:white;border:none;border-radius:7px;font-family:"Tajawal",sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--dark);color:white;padding:9px 18px;border-radius:9px;font-size:13px;font-weight:600;z-index:3000;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+@media print{
+  .no-print,.pt-btn,.pt-add,.pg-toolbar{display:none!important}
+  .tl-btn:not(.on){display:none!important}
+  .app-header,.sidebar,.add-el-row,.btn-addpage{display:none!important}
+  body,html{background:white!important;margin:0!important;padding:0!important}
+  .preview-area{background:white!important;padding:0!important;gap:0!important}
+  #screen-editor.active{display:block!important;height:auto!important;overflow:visible!important}
+  .a4-page{box-shadow:none!important;border-radius:0!important;margin:0!important;page-break-after:always;width:210mm!important;min-height:297mm!important}
+  .a4-page:last-child{page-break-after:auto}
+}
+@page{size:A4 portrait;margin:0}
+
+/* ══ تحسينات الموبايل: تصغير صفحة A4 مع الحفاظ على نسبتها بدلاً من تشويهها ══ */
+@media(max-width:900px){
+  #screen-editor.active{flex-direction:column-reverse;height:auto;min-height:calc(100vh - 52px)}
+  .sidebar{width:100%;min-width:0;border-left:none;border-bottom:1px solid #e5e5e5;max-height:48vh}
+  .sb-body{max-height:35vh;overflow-y:auto}
+  #screen-editor .preview-area{padding:8px;overflow-x:auto}
+  .a4-page{width:794px;min-height:1123px;transform-origin:top center;transform:scale(var(--mob-scale,.45));margin-bottom:calc((var(--mob-scale,.45) - 1) * 1123px + 14px)}
+  .pg-toolbar{position:static}
+}
+@media(max-width:600px){.a4-page{--mob-scale:.42}}
+@media(max-width:480px){.a4-page{--mob-scale:.38}}
+@media(max-width:380px){.a4-page{--mob-scale:.32}}
+
+/* تحسينات إضافية للموبايل في واجهة الترحيب */
+@media(max-width:520px){
+  .wc-row{grid-template-columns:1fr}
+  .staff-row{grid-template-columns:1fr!important}
+  .wc-card{max-width:100%}
+  .wc-body{padding:18px 16px 22px}
+  .go-btn,.dt-btn,.mbtn,.si-btn{min-height:44px}
+  .si-btn{padding:8px 14px!important}
+}
+
+/* ══ واجهة الترحيب ══ */
+#screen-welcome{background:linear-gradient(155deg,#15445A 0%,#0DA9A6 60%,#07A869 100%);align-items:center;justify-content:center;padding:24px;position:relative;overflow:hidden}
+#screen-welcome::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+.wc-card{background:white;border-radius:20px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden;position:relative;z-index:1}
+.wc-top{background:linear-gradient(135deg,#15445A,#0DA9A6,#07A869);padding:26px 24px 20px;text-align:center;position:relative}
+.wc-top::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),#e8d09a,var(--gold))}
+.wc-logo-wrap{width:76px;height:76px;background:white;border-radius:50%;margin:0 auto 11px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.2);overflow:hidden}
+.wc-logo-wrap img{width:60px;height:60px;object-fit:contain}
+.wc-country{color:rgba(255,255,255,.75);font-size:11px;font-weight:700}
+.wc-min{color:white;font-size:20px;font-weight:900;margin:3px 0}
+.wc-body{padding:22px 24px 26px}
+.wc-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:12px}
+.wc-field{display:flex;flex-direction:column;gap:4px}
+.wc-lbl{font-size:11px;font-weight:700;color:var(--dark)}
+.wc-inp{padding:9px 12px;border:1.5px solid #dde8ee;border-radius:8px;font-family:"Tajawal",sans-serif;font-size:13px;color:#1a2a35;outline:none;background:white;width:100%;transition:border-color .2s}
+.wc-inp:focus{border-color:var(--teal)}
+.date-bar{display:flex;align-items:center;gap:10px;padding:9px 13px;background:#f5f8fa;border-radius:9px;border:1.5px solid #dde8ee;margin-bottom:13px}
+.date-icon{font-size:17px}
+.date-val{flex:1;font-size:13px;font-weight:700;color:var(--dark)}
+.date-toggle{display:flex;gap:4px}
+.dt-btn{padding:4px 10px;border-radius:6px;border:1.5px solid #dde;background:white;font-family:"Tajawal",sans-serif;font-size:11px;font-weight:700;color:#666;cursor:pointer;transition:all .15s}
+.dt-btn.active{background:var(--teal);border-color:var(--teal);color:white}
+.tasks-title{text-align:center;font-size:17px;font-weight:900;color:var(--dark);padding:12px;background:#f5f8fa;border-radius:10px;border:1.5px solid #dde8ee;margin-bottom:14px}
+.dir-row{display:flex;gap:9px}
+.dir-inp{flex:1}
+.go-btn{padding:10px 18px;background:linear-gradient(135deg,var(--dark),var(--teal));color:white;border:none;border-radius:9px;font-family:"Tajawal",sans-serif;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(21,68,90,.3);transition:transform .15s,box-shadow .15s}
+.go-btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(21,68,90,.4)}
+
+/* ══ Chips أمثلة العنوان ══ */
+.t-chip{padding:5px 11px;border-radius:14px;border:1.5px solid #cdd9e0;background:white;font-family:"Tajawal",sans-serif;font-size:11px;font-weight:700;color:#5a7280;cursor:pointer;transition:all .15s;line-height:1}
+.t-chip:hover{border-color:var(--teal);background:#e8f9f9;color:var(--dark);transform:translateY(-1px)}
+.t-chip:active{transform:translateY(0)}
+.t-chip-clear{border-style:dashed;color:#999}
+.t-chip-clear:hover{border-color:#c44;background:#fee;color:#c44}
+
+/* ══ أزرار المستويات داخل رأس الـ block ══ */
+.task-levels{display:flex;gap:4px;flex-shrink:0}
+.tl-btn{padding:3px 8px;border-radius:5px;border:1.5px solid;font-family:"Tajawal",sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;background:rgba(255,255,255,.12);line-height:1.5}
+.tl-ex{border-color:var(--green);color:var(--green)}
+.tl-ex.on{background:var(--green);color:white}
+.tl-gd{border-color:var(--teal);color:var(--teal)}
+.tl-gd.on{background:var(--teal);color:white}
+.tl-bl{border-color:#E8820C;color:#E8820C}
+.tl-bl.on{background:#E8820C;color:white}
+.note-inp{width:100%;padding:6px 9px;border:1px solid #e0e0e0;border-radius:5px;font-family:"Tajawal",sans-serif;font-size:11px;color:#333;background:white;outline:none;resize:vertical;min-height:38px}
+.note-inp:focus{border-color:var(--teal)}
+.sel-actions-wrap{display:flex;flex-wrap:wrap;gap:4px;padding:2px 0}
+.sa-tag{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#e8f9f9;border:1px solid var(--teal);border-radius:12px;font-size:10px;font-weight:700;color:var(--dark)}
+.sa-remove{background:none;border:none;cursor:pointer;color:var(--teal);font-size:12px;line-height:1;padding:0}
+/* modal الإجراءات */
+.am-box{background:white;border-radius:14px;padding:22px;max-width:450px;width:92%;box-shadow:0 8px 32px rgba(0,0,0,.2);direction:rtl}
+.am-hd{font-size:15px;font-weight:800;color:var(--dark);margin-bottom:3px}
+.am-sub{font-size:11px;color:#999;margin-bottom:11px}
+.am-name{background:#f0fafa;border-radius:7px;padding:7px 11px;font-size:12px;font-weight:700;color:var(--dark);margin-bottom:12px;border:1px solid #cceee}
+.act-list{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;max-height:260px;overflow-y:auto}
+.act-item{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:8px;border:1.5px solid #e0e0e0;cursor:pointer;transition:all .15s}
+.act-item:hover{border-color:var(--teal);background:#f0fafa}
+.act-item.sel{border-color:var(--teal);background:#e8f9f9}
+.act-chk{width:17px;height:17px;border-radius:4px;border:2px solid #ccc;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px}
+.act-item.sel .act-chk{background:var(--teal);border-color:var(--teal);color:white}
+.act-txt{font-size:12px;font-weight:600;color:#1a2a35}
+/* layout toggle */
+.layout-toggle{display:flex;gap:3px;background:rgba(255,255,255,.15);border-radius:7px;padding:3px;margin-right:auto}
+.lt-btn{padding:5px 11px;border-radius:5px;border:none;cursor:pointer;font-family:"Tajawal",sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.7);background:transparent;transition:all .15s}
+.lt-btn.active{background:white;color:var(--dark)}
+</style>
+</head>
+<body>
+<!-- شريط الأداة داخل المحرر فقط -->
+<div class="app-header" id="app-header" style="display:none">
+  <div class="logo-wrap" style="width:38px;height:38px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.15)">
+    <img id="hdr-logo-img" style="width:30px;height:30px;object-fit:contain" alt="">
+  </div>
+  <div><div class="logo" id="hdr-title" style="font-size:13px;font-weight:800">وزارة التعليم</div><div class="sub" id="hdr-sub">محرر التقارير التعليمية</div></div>
+
+</div>
+
+<!-- واجهة الترحيب -->
+<div class="screen active" id="screen-welcome">
+  <div class="wc-card">
+    <div class="wc-top">
+      <div class="wc-logo-wrap">
+        <img id="wc-logo-img" alt="شعار وزارة التعليم">
+      </div>
+      <div class="wc-country">المملكة العربية السعودية</div>
+      <div class="wc-min">وزارة التعليم</div>
+    </div>
+    <div class="wc-body">
+      <div class="wc-row">
+        <div class="wc-field">
+          <label class="wc-lbl">الإدارة العامة للتعليم</label>
+          <input class="wc-inp" id="wc-dept" placeholder="الإدارة العامة للتعليم">
+        </div>
+        <div class="wc-field">
+          <label class="wc-lbl">اسم المدرسة</label>
+          <input class="wc-inp" id="wc-school" placeholder="اسم المدرسة">
+        </div>
+      </div>
+      <div class="date-bar">
+        <span class="date-icon">📅</span>
+        <span class="date-val" id="wc-date">—</span>
+        <div class="date-toggle">
+          <button class="dt-btn active" id="dt-h" onclick="setDateMode('h')">هجري</button>
+          <button class="dt-btn" id="dt-m" onclick="setDateMode('m')">ميلادي</button>
+        </div>
+      </div>
+      <div class="tasks-title-wrap" style="background:#f5f8fa;border-radius:10px;border:1.5px solid #dde8ee;margin-bottom:8px;overflow:hidden;position:relative">
+        <input class="wc-inp" id="wc-report-title" placeholder="✏️ اكتب عنوان التقرير... (مثال: قائمة مهام مدير المدرسة)" value="قائمة مهام مدير المدرسة" style="text-align:center;font-size:15px;font-weight:900;color:var(--dark);border:none;background:transparent;padding:12px;border-radius:0">
+      </div>
+      <div class="title-chips" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;justify-content:center">
+        <button type="button" class="t-chip" onclick="setReportTitle('قائمة مهام مدير المدرسة')">مدير</button>
+        <button type="button" class="t-chip" onclick="setReportTitle('قائمة مهام وكيل المدرسة')">وكيل</button>
+        <button type="button" class="t-chip" onclick="setReportTitle('قائمة مهام المرشد الطلابي')">مرشد طلابي</button>
+        <button type="button" class="t-chip" onclick="setReportTitle('قائمة مهام رائد النشاط')">رائد نشاط</button>
+        <button type="button" class="t-chip" onclick="setReportTitle('قائمة مهام المعلم')">معلم</button>
+        <button type="button" class="t-chip" onclick="setReportTitle('قائمة مهام الموجه')">موجه</button>
+        <button type="button" class="t-chip t-chip-clear" onclick="setReportTitle('')" title="إخفاء العنوان">بدون عنوان</button>
+      </div>
+      <div class="staff-row" style="display:grid;grid-template-columns:130px 1fr;gap:7px;margin-bottom:9px;align-items:center">
+        <label class="wc-lbl" style="padding:0 5px;font-size:12px;color:var(--dark);font-weight:700;background:#f0f4f8;border-radius:7px;text-align:center;line-height:38px">🏫 مدير المدرسة</label>
+        <input class="wc-inp" id="wc-staff-name" placeholder="اسم المدير (اختياري)">
+      </div>
+      <div class="teacher-row" style="display:grid;grid-template-columns:130px 1fr;gap:7px;margin-bottom:9px">
+        <select class="wc-inp" id="wc-staff-role" style="cursor:pointer;padding:9px 8px;font-size:12px;font-weight:700">
+          <option value="المعلم">معلم</option>
+          <option value="المعلمة">معلمة</option>
+          <option value="الموجه">موجه</option>
+          <option value="الموجهة">موجهة</option>
+          <option value="المرشد الطلابي">مرشد طلابي</option>
+          <option value="المرشدة الطلابية">مرشدة طلابية</option>
+          <option value="رائد النشاط">رائد نشاط</option>
+          <option value="رائدة النشاط">رائدة نشاط</option>
+          <option value="وكيل المدرسة">وكيل المدرسة</option>
+          <option value="وكيلة المدرسة">وكيلة المدرسة</option>
+          <option value="">— مخصص —</option>
+        </select>
+        <input class="wc-inp" id="wc-teacher-name" placeholder="اسم المعلم / المنسوب (اختياري — يظهر يمين أسفل التقرير)">
+      </div>
+      <div class="dir-row">
+        <button class="go-btn" onclick="goEditor()" style="width:100%">انتقال للمحرر ←</button>
+      </div>
+
+      <!-- إضافة واجهة التقارير المحفوظة وأزرار الحفظ والحذف المحلي -->
+      <div class="saved-sec" style="margin-top: 20px;">
+        <div class="saved-hd">التقارير المحفوظة <span id="saved-count"></span></div>
+        <div id="saved-list" class="saved-list"></div>
+        <div style="display:flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
+            <button class="mbtn mbtn-gray" style="flex:1; font-size: 11px; padding: 6px; color: #c44;" onclick="deleteAllLocal()">🗑️ حذف جميع التقارير المحفوظة</button>
+        </div>
+      </div>
+      <!-- نهاية الإضافة -->
+
+    </div>
+  </div>
+  <div style="margin-top:25px; text-align:center; color:rgba(255,255,255,0.95); font-size:12px; z-index:2; font-weight:700; text-shadow: 0 1px 3px rgba(0,0,0,0.3); padding: 0 15px;">
+    نظام المهام اليومية للمدير اهداء من متجر مؤشرات للمنتجات التعليمية والمدرسية جميع الحقوق محفوظة 2026
+  </div>
+</div>
+
+<div class="screen" id="screen-select">
+  <div class="sel-wrap">
+    <button class="back-btn" onclick="goHome()">→ رجوع</button>
+    <div class="sel-title" id="sel-title">اختر نوع التقرير</div>
+    <div class="gender-box">
+      <div class="gender-lbl">مسماك الوظيفي في التقرير:</div>
+      <div class="g-btns" id="gender-btns"></div>
+      <div style="margin-top:8px"><input type="text" class="f-inp" id="custom-title" placeholder="أو اكتب مسماك الحقيقي..." style="max-width:270px"></div>
+    </div>
+    <div class="rpts-list" id="reports-list"></div>
+    <div style="margin-top:12px"><button class="free-btn" onclick="startTemplate('empty')" style="font-size:13px;padding:12px">✏️ إنشاء تقرير من الصفر</button></div>
+  </div>
+</div>
+
+<div class="screen" id="screen-editor">
+  <div class="sidebar">
+    <div class="sb-head">
+      <div><div class="sh-title" id="ed-name">التقرير</div></div>
+      <button class="sh-back" onclick="goHome()">→ رجوع</button>
+    </div>
+    <div class="sb-body" id="sb-fields"></div>
+    <div class="sb-actions">
+      <button class="btn-save" onclick="saveReport()">💾 حفظ التقرير</button>
+      <button class="btn-addpage" onclick="addPage()">+ إضافة صفحة</button>
+      <button class="btn-pdf" onclick="downloadPDF()">⬇ تحميل PDF</button>
+      <button class="btn-sard" onclick="generateSardAndStats()" style="padding:9px;background:#C1B48A;color:white;border:none;border-radius:8px;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;margin-top:5px;">📊 توليد السرد والإحصاء</button>
+    </div>
+  </div>
+  <div class="preview-area" id="preview-area"></div>
+</div>
+
+<div class="modal-overlay" id="modal-add-el" onclick="if(event.target===this)closeModal('modal-add-el')">
+  <div class="modal-box" style="max-width:480px">
+    <div style="text-align:left;margin-bottom:6px"><button onclick="closeModal('modal-add-el')" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;line-height:1">×</button></div>
+    <div class="modal-icon">➕</div>
+    <div class="modal-title">إضافة عنصر جديد</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div id="el-t-text" class="el-type-card active" onclick="selElType('text')"><div style="font-size:24px;margin-bottom:5px">📝</div><div style="font-size:12px;font-weight:700;color:var(--dark)">قسم نصي</div><div style="font-size:10px;color:#aaa">بعنوان ومحتوى</div></div>
+      <div id="el-t-img" class="el-type-card" onclick="selElType('img')"><div style="font-size:24px;margin-bottom:5px">🖼️</div><div style="font-size:12px;font-weight:700;color:var(--dark)">صورة / شاهد</div><div style="font-size:10px;color:#aaa">تتحرك مثل العناصر</div></div>
+    </div>
+    <div id="el-text-f" style="text-align:right">
+      <div class="f-grp" style="margin-bottom:9px"><label class="f-lbl">عنوان القسم</label><input class="f-inp" id="new-el-title" placeholder="مثال: الأهداف"></div>
+      <div class="f-grp"><label class="f-lbl">المحتوى (اختياري)</label><textarea class="f-ta" id="new-el-content" placeholder="اكتب المحتوى هنا..." style="min-height:60px"></textarea></div>
+      <div style="margin-top:8px"><label class="f-lbl">عرض القسم</label>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <button class="el-w-btn active" id="elw-half" onclick="selElW('half')">نصف صفحة</button>
+          <button class="el-w-btn" id="elw-full" onclick="selElW('full')">صفحة كاملة</button>
+        </div>
+      </div>
+    </div>
+    <div id="el-img-f" style="display:none">
+      <div class="up-area" onclick="document.getElementById('el-img-inp').click()">
+        <input type="file" id="el-img-inp" accept="image/*" onchange="previewElImg(this)">
+        <div style="font-size:26px;margin-bottom:4px">📷</div>
+        <div style="font-size:11px;color:#aaa">اضغط لاختيار صورة</div>
+      </div>
+      <div id="el-img-prev" style="margin-top:8px;display:none"><img id="el-img-prev-img" style="width:100%;border-radius:8px;max-height:130px;object-fit:cover"></div>
+    </div>
+    <div class="modal-btns" style="margin-top:14px">
+      <button class="mbtn mbtn-dark" onclick="confirmAddEl()">إضافة للتقرير</button>
+      <button class="mbtn mbtn-gray" onclick="closeModal('modal-add-el')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-save" onclick="if(event.target===this)closeModal('modal-save')">
+  <div class="modal-box">
+    <div style="text-align:left;margin-bottom:6px"><button onclick="closeModal('modal-save')" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;line-height:1">×</button></div>
+    <div class="modal-icon">💾</div>
+    <div class="modal-title">حفظ التقرير</div>
+    <input type="text" class="f-inp" id="save-name-inp" placeholder="اسم التقرير" style="margin:10px 0 16px;font-size:13px">
+    <div class="modal-btns">
+      <button class="mbtn mbtn-dark" onclick="doSave()">حفظ</button>
+      <button class="mbtn mbtn-gray" onclick="closeModal('modal-save')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- modal الإجراءات -->
+<div class="modal-overlay" id="modal-actions" onclick="if(event.target===this)closeModal('modal-actions')">
+  <div class="am-box">
+    <div style="text-align:left;margin-bottom:6px"><button onclick="closeModal('modal-actions')" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button></div>
+    <div class="am-hd">⚠️ الإجراءات والتوجيهات</div>
+    <div class="am-sub">اختر إجراءً أو أكثر (بحد أقصى ٣ إجراءات)</div>
+    <div class="am-name" id="am-task-name"></div>
+    
+    <div style="display:flex; gap:5px; margin-bottom:10px;">
+      <input type="text" id="custom-act-inp" class="f-inp" placeholder="اكتب إجراءً مخصصاً..." style="flex:1;">
+      <button class="mbtn mbtn-dark" style="padding:6px 12px; font-size:11px;" onclick="addCustomAct()">إضافة</button>
+    </div>
+
+    <div class="act-list" id="am-act-list"></div>
+    <div class="modal-btns">
+      <button class="mbtn mbtn-teal" onclick="confirmActions()">تطبيق</button>
+      <button class="mbtn mbtn-gray" onclick="closeModal('modal-actions')">تخطي</button>
+    </div>
+  </div>
+</div>
+
+<!-- modal الزيارة الصفية -->
+<div class="modal-overlay" id="modal-visit-form" onclick="if(event.target===this)closeModal('modal-visit-form')">
+  <div class="am-box">
+    <div style="text-align:left;margin-bottom:6px"><button onclick="closeModal('modal-visit-form')" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa">×</button></div>
+    <div class="am-hd">📝 تفاصيل الزيارة الصفية</div>
+    <div class="f-grp" style="text-align:right;margin-top:10px"><label class="f-lbl">اسم المعلم</label><input class="f-inp" id="v-teacher" placeholder="اسم المعلم"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:right;margin-bottom:8px">
+      <div class="f-grp"><label class="f-lbl">التخصص</label><input class="f-inp" id="v-spec" placeholder="التخصص"></div>
+      <div class="f-grp"><label class="f-lbl">الحصة</label><input class="f-inp" id="v-period" placeholder="الحصة"></div>
+      <div class="f-grp"><label class="f-lbl">الصف</label><input class="f-inp" id="v-class" placeholder="الصف"></div>
+      <div class="f-grp"><label class="f-lbl">موضوع الدرس</label><input class="f-inp" id="v-topic" placeholder="موضوع الدرس"></div>
+    </div>
+    <div class="f-grp" style="text-align:right;margin-bottom:8px">
+      <label class="f-lbl">غرض الزيارة (اختياري)</label>
+      <select class="f-inp" id="v-purpose" style="padding-right:5px;cursor:pointer">
+        <option value="">-- اختر غرض الزيارة --</option>
+        <option value="التنمية المهنية: مساعدة المعلم على تطوير أدائه ومهاراته التدريسية.">التنمية المهنية: مساعدة المعلم على تطوير أدائه ومهاراته التدريسية.</option>
+        <option value="تقييم الأداء: ملاحظة سير الدرس وتحديد نقاط القوة والضعف.">تقييم الأداء: ملاحظة سير الدرس وتحديد نقاط القوة والضعف.</option>
+        <option value="حل المشكلات: مناقشة الصعوبات التربوية التي تواجه المعلم داخل الصف.">حل المشكلات: مناقشة الصعوبات التربوية التي تواجه المعلم داخل الصف.</option>
+        <option value="تبادل الخبرات: نقل المعارف والمهارات بين المعلمين عبر الزيارات المتبادلة.">تبادل الخبرات: نقل المعارف والمهارات بين المعلمين عبر الزيارات المتبادلة.</option>
+        <option value="تعزيز الثقة: دعم المعلم وبناء جسور التعاون بينه وبين المشرف.">تعزيز الثقة: دعم المعلم وبناء جسور التعاون بينه وبين المشرف.</option>
+        <option value="الاطلاع على التفاعل: مراقبة تفاعل الطلاب ومدى استيعابهم للمادة الدراسية">الاطلاع على التفاعل: مراقبة تفاعل الطلاب ومدى استيعابهم للمادة الدراسية</option>
+      </select>
+    </div>
+    <div class="f-grp" style="text-align:right">
+      <label class="f-lbl">تغذية راجعة</label>
+      <div style="display:flex; gap:5px; margin-bottom:6px; flex-wrap:wrap;">
+        <button type="button" class="ig-btn" onclick="addFeedbackText('تغذية تعزيزية مختصرة: ')">تعزيزية مختصرة</button>
+        <button type="button" class="ig-btn" onclick="addFeedbackText('تغذية تطويرية: ')">تغذية تطويرية</button>
+        <button type="button" class="ig-btn" onclick="addFeedbackText('إشادة: ')">إشادة</button>
+      </div>
+      <textarea class="f-ta" id="v-feedback" placeholder="اكتب التغذية الراجعة أو اختر من القائمة أعلاه..."></textarea>
+    </div>
+    <div class="modal-btns" style="margin-top:12px">
+      <button class="mbtn mbtn-teal" onclick="confirmVisitForm()">اعتماد وإدراج</button>
+      <button class="mbtn mbtn-gray" onclick="closeModal('modal-visit-form')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="ov-box">
+    <div class="ov-title" id="ov-title">جاري المعالجة...</div>
+    <div class="ov-text" id="ov-text">يرجى الانتظار</div>
+    <div class="spinner" id="ov-spin"></div>
+    <button class="ov-close" id="ov-close" style="display:none" onclick="closeOv()">إغلاق</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var LC='data:image/png;base64,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';
+var LW='data:image/png;base64,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';
+
+/* ══ بيانات الواجهة ══ */
+var wcDept='',wcSchool='',wcDirector='',dateMode='h',wcReportTitle='قائمة مهام مدير المدرسة',wcStaffRole='المعلم',wcTeacherName='';
+
+/* ضبط شعارَي الترحيب وشريط الأداة من المتغير المضمّن */
+(function(){var w=document.getElementById('wc-logo-img');if(w)w.src=LC;var h=document.getElementById('hdr-logo-img');if(h)h.src=LW;})();
+
+function getHijri(){try{return new Intl.DateTimeFormat('ar-SA-u-ca-islamic',{day:'numeric',month:'long',year:'numeric'}).format(new Date());}catch(e){return new Date().toLocaleDateString('ar');}}
+function getMiladi(){return new Date().toLocaleDateString('ar-SA',{day:'numeric',month:'long',year:'numeric'});}
+function setDateMode(m){
+  dateMode=m;
+  document.getElementById('dt-h').classList.toggle('active',m==='h');
+  document.getElementById('dt-m').classList.toggle('active',m==='m');
+  document.getElementById('wc-date').textContent=m==='h'?getHijri():getMiladi();
+}
+document.getElementById('wc-date').textContent=getHijri();
+
+/* ضبط عنوان التقرير من الـ chips */
+function setReportTitle(t){
+  var inp=document.getElementById('wc-report-title');
+  if(!inp)return;
+  inp.value=t;
+  wcReportTitle=t.trim();
+  var ed=document.getElementById('ed-name');
+  if(ed)ed.textContent=wcReportTitle||'تقرير';
+  if(typeof renderPrev==='function' && document.getElementById('screen-editor').classList.contains('active'))lu();
+}
+
+/* مستمعات حية للحقول الجديدة (عنوان التقرير + المسمى الوظيفي + اسم المعلم) */
+(function(){
+  var titleInp=document.getElementById('wc-report-title');
+  if(titleInp){titleInp.addEventListener('input',function(){wcReportTitle=this.value.trim();var ed=document.getElementById('ed-name');if(ed)ed.textContent=wcReportTitle||'تقرير';if(typeof renderPrev==='function' && document.getElementById('screen-editor').classList.contains('active'))lu();});}
+  var roleSel=document.getElementById('wc-staff-role');
+  if(roleSel){roleSel.addEventListener('change',function(){wcStaffRole=this.value.trim();if(typeof renderPrev==='function' && document.getElementById('screen-editor').classList.contains('active'))lu();});}
+  var nameInp=document.getElementById('wc-staff-name');
+  if(nameInp){nameInp.addEventListener('input',function(){wcDirector=this.value.trim();if(typeof renderPrev==='function' && document.getElementById('screen-editor').classList.contains('active'))lu();});}
+  var teacherInp=document.getElementById('wc-teacher-name');
+  if(teacherInp){teacherInp.addEventListener('input',function(){wcTeacherName=this.value.trim();if(typeof renderPrev==='function' && document.getElementById('screen-editor').classList.contains('active'))lu();});}
+})();
+
+function goEditor(){
+  wcDept=document.getElementById('wc-dept').value.trim()||'الإدارة العامة للتعليم';
+  wcSchool=document.getElementById('wc-school').value.trim()||'اسم المدرسة';
+  wcStaffRole=document.getElementById('wc-staff-role').value.trim();
+  wcDirector=document.getElementById('wc-staff-name').value.trim();
+  wcTeacherName=document.getElementById('wc-teacher-name').value.trim();
+  wcReportTitle=document.getElementById('wc-report-title').value.trim();
+  var dateVal=dateMode==='h'?getHijri():getMiladi();
+  /* تحديث شريط الأداة - نص "المدير" ثابت */
+  document.getElementById('app-header').style.display='flex';
+  document.getElementById('hdr-title').textContent=wcDept+(wcSchool?' — '+wcSchool:'');
+  document.getElementById('hdr-sub').textContent=wcDirector?'المدير: '+wcDirector:(wcReportTitle||'تقرير');
+  /* إعداد القالب الجاهز بالمهمتين */
+  isFree=true;curReport=null;extraPages=1;moveMode=false;saveId=null;curGender='';
+  PB={1:[
+    {id:1001,title:'التفاعل في الاصطفاف الصباحي — الطلاب',content:'',cols:2,type:'text',isTask:true},
+    {id:1002,title:'التفاعل في الاصطفاف الصباحي — المعلمون',content:'',cols:2,type:'text',isTask:true},
+    {id:1003,title:'حصر حضور المعلمين (حضوري)',content:'',cols:2,type:'text',isTask:true,taskType:'huduri',multiInputs:[{id:'att',lbl:'الحضور'},{id:'abs',lbl:'الغياب'}]},
+    {id:1004,title:'حصر الانضباط اليومي للطلاب (نور)',content:'',cols:2,type:'text',isTask:true,taskType:'noor',multiInputs:[{id:'att',lbl:'الحضور'},{id:'abs',lbl:'الغياب'}]},
+    {id:1005,title:'التواصل مع الأسرة والمجتمع (مواعيد مدرستي)',content:'',cols:2,type:'text',isTask:true,taskType:'mawaeed',inputLabel:'عدد الحجوزات'},
+    {id:1006,title:'إجراءات الموارد البشرية (فارس)',content:'',cols:2,type:'text',isTask:true,taskType:'faris',inputLabel:'عدد الإجراءات'},
+    {id:1007,title:'الدعم الموحد',content:'',cols:2,type:'text',isTask:true,taskType:'support',inputLabel:'عدد التذاكر المرفوعة'}
+  ],
+  2:[
+    {id:1008,title:'الإشراف والمناوبة والاحتياط',content:'',cols:2,type:'text',isTask:true,taskType:'supervision'},
+    {id:1009,title:'عمليات التدريس والزيارات الصفية',content:'',cols:2,type:'text',isTask:true,taskType:'visit'},
+    {id:1010,title:'الاجتماع بلجان المدرسة',content:'',cols:2,type:'text',isTask:true,taskType:'committees'}
+  ]};
+  document.getElementById('ed-name').textContent=wcReportTitle||'تقرير';
+  buildFreeSb();
+  renderPrev();
+  showScreen('editor');
+}
+
+function setLayout(mode){
+  var ed=document.getElementById('screen-editor');
+  if(mode==='top'){ed.style.flexDirection='column';}
+  else{ed.style.flexDirection='row';}
+  document.getElementById('lt-side').classList.toggle('active',mode==='side');
+  document.getElementById('lt-top').classList.toggle('active',mode==='top');
+}
+
+/* ══ منطق المستويات والإجراءات ══ */
+var taskState={};
+var curActBlock=null;
+var selActs=[];
+var BELOW_ACTS=[
+  'توجيه شفهي فوري',
+  'تسجيل الملاحظة في السجل الرسمي',
+  'إخطار وكيل المدرسة',
+  'التواصل مع ولي الأمر',
+  'رفع تقرير للإدارة التعليمية',
+  'جلسة توجيهية مع المعلم',
+  'جدولة زيارة متابعة',
+  'عقد اجتماع طارئ',
+  'إصدار تنبيه رسمي'
+];
+
+var TASK_LEVELS={
+  default:  [['ex','ممتاز'],['gd','جيد جداً'],['bl','دون المأمول']],
+  noor:     [['ex','منتظم'],['gd','يحتاج متابعة'],['bl','خارج السيطرة']],
+  mawaeed:  [['ex','نشاط جيد'],['gd','نشاط محدود'],['bl','لا يوجد نشاط']],
+  faris:    [['ex','مُنجز'],['gd','قيد التنفيذ'],['bl','متأخر']],
+  support:  [['ex','مُعالج'],['gd','قيد المعالجة'],['bl','متراكم']],
+  huduri:   [['ex','ممتاز'],['gd','جيد جداً'],['bl','دون المأمول']],
+  supervision:[['ex','تغطية كاملة'],['gd','تغطية جزئية'],['bl','قصور / عجز']],
+  visit:    [['ex','استطلاعية'],['gd','مخطط لها'],['bl','بدعوة من المعلم']],
+  committees:[['ex','مجدول'],['gd','متابعة تنفيذ'],['bl','طارئ']]
+};
+
+var TASK_ACTS={
+  default:{
+    ex:['إشادة بجهود المعلم','تقديم خطاب شكر','توثيق الممارسة المتميزة','نقل الخبرة للزملاء'],
+    gd:['توجيه بالاستمرار وتطوير الأداء','تحفيز لتقديم الأفضل','مناقشة خطة تحسين بسيطة'],
+    bl:['توجيه شفهي فوري','تسجيل الملاحظة في السجل الرسمي','إخطار وكيل المدرسة','التواصل مع ولي الأمر','رفع تقرير للإدارة التعليمية','جلسة توجيهية مع المعلم','جدولة زيارة متابعة','عقد اجتماع طارئ','إصدار تنبيه رسمي']
+  },
+  supervision:{
+    ex:['إشادة بالتغطية الكاملة','خطاب شكر للمناوبين'],
+    gd:['توجيه بتغطية النقاط العمياء','تنبيه لتكثيف التواجد'],
+    bl:['تكليف معلمين لسد العجز','إعادة توزيع جدول المناوبة','إخطار وكيل شؤون المعلمين','تدوين ملاحظة في السجل','توجيه شفهي للمناوبين','إصدار تنبيه رسمي']
+  },
+  huduri:{
+    ex:['إشادة بالانضباط','منح نقاط تميز'],
+    gd:['توجيه بالاستمرار على الانضباط','تنبيه شفهي بسيط'],
+    bl:['تسجيل الغياب في حضوري','إخطار المعلم المتأخر','التواصل مع المعلم الغائب','إخطار وكيل الشؤون المدرسية','تدوين الملاحظة في السجل الرسمي','تعيين بديل للحصة','رفع تقرير للإدارة التعليمية','إصدار إنذار رسمي']
+  },
+  noor:{
+    ex:['إشادة بانتظام الطلاب','تكريم الفصول المتميزة'],
+    gd:['توجيه المرشد بمتابعة الحالات الفردية','تحفيز الطلاب'],
+    bl:['مراجعة بيانات الغياب في نور','التواصل مع أولياء الأمور للغائبين','تسجيل مخالفات الانضباط','إخطار المرشد الطلابي','جلسة توجيهية جماعية','رصد الحالات المتكررة','رفع تقرير للإدارة التعليمية','عقد اجتماع طارئ']
+  },
+  mawaeed:{
+    ex:['إشادة بالتواصل الفعال','توثيق المبادرات'],
+    gd:['توجيه بتفعيل أكبر للمنصة','متابعة الردود'],
+    bl:['مراجعة الحجوزات في مواعيد مدرستي','التواصل مع أولياء الأمور المتأخرين','تأكيد المواعيد المحجوزة','تحديث سجل التواصل مع الأسرة','رفع تقرير التواصل المجتمعي','جدولة حملة توعية للأسرة']
+  },
+  faris:{
+    ex:['إشادة بسرعة الإنجاز'],
+    gd:['متابعة الإجراءات قيد التنفيذ'],
+    bl:['مراجعة الإجراءات المعلقة في فارس','إتمام الإجراءات المتأخرة','التواصل مع الموارد البشرية','رفع طلب دعم فني','تسجيل الملاحظة في السجل','رفع تقرير للإدارة التعليمية','جدولة متابعة الإجراءات']
+  },
+  support:{
+    ex:['توثيق إغلاق التذاكر','إشادة بسرعة المعالجة'],
+    gd:['متابعة التذاكر قيد المعالجة'],
+    bl:['مراجعة التذاكر المفتوحة','متابعة التذاكر المتأخرة','رفع تذكرة جديدة','التواصل مع فريق الدعم الفني','تصعيد التذكرة لمستوى أعلى','تسجيل الحل في السجل الرسمي','رفع تقرير الدعم للإدارة']
+  },
+  committees:{
+    ex:['إشادة بانتظام الاجتماعات','توثيق التوصيات'],
+    gd:['متابعة تنفيذ التوصيات','توجيه بتفعيل اللجان'],
+    bl:['استدعاء عاجل لأعضاء اللجنة','متابعة التوصيات غير المنفذة','اعتماد وتفعيل المحاضر المتأخرة','تكليف لجان فرعية بمهام فورية','رفع تقرير استثنائي لإدارة التعليم','إعادة تشكيل اللجنة']
+  }
+};
+
+function getTaskType(bid){
+  var tt='default';
+  Object.keys(PB).forEach(function(p){(PB[p]||[]).forEach(function(b){if(String(b.id)===String(bid)&&b.taskType)tt=b.taskType;});});
+  return tt;
+}
+
+function initTS(bid){if(!taskState[bid])taskState[bid]={level:null,note:'',actions:[],multiVals:{}};}
+
+function setTaskLevel(bid,lv){
+  initTS(bid);
+  if(taskState[bid].level===lv){
+    taskState[bid].level=null;
+    // taskState[bid].actions=[]; تم الإلغاء لتبقى الإجراءات محفوظة
+    syncLevelBtns(bid);
+    syncBlockBody(bid);
+    return;
+  }
+  taskState[bid].level=lv;
+  // taskState[bid].actions=[]; تم الإلغاء لتبقى الإجراءات محفوظة
+  syncLevelBtns(bid);
+  
+  openActionsModal(bid); // فتح النافذة المنبثقة لجميع المستويات
+  syncBlockBody(bid);
+}
+
+function syncLevelBtns(bid){
+  var lv=taskState[bid]?taskState[bid].level:null;
+  ['ex','gd','bl'].forEach(function(k){
+    var b=document.getElementById('tl-'+k+'-'+bid);
+    if(b)b.classList.toggle('on',lv===k);
+  });
+      var body=document.getElementById('tb-'+bid);
+      if(body){
+        var cell=body.closest('.c-block');
+        if(cell){
+          if(lv==='ex'){cell.style.borderColor='#07A869';cell.style.boxShadow='inset 0 0 0 2px #07A869';}
+          else if(lv==='gd'){cell.style.borderColor='#0DA9A6';cell.style.boxShadow='inset 0 0 0 2px #0DA9A6';}
+          else if(lv==='bl'){cell.style.borderColor='#E8820C';cell.style.boxShadow='inset 0 0 0 2px #E8820C';}
+          else{cell.style.borderColor='';cell.style.boxShadow='';}
+        }
+      }
+    }
+
+function syncBlockBody(bid, bodyElement){
+  var body=bodyElement || document.getElementById('tb-'+bid);if(!body)return;
+  var st=taskState[bid]||{level:null,note:'',actions:[]};
+  body.innerHTML='';
+  /* عرض قيمة الإدخال للطباعة */
+  var blkObj=null;
+  Object.keys(PB).forEach(function(p){(PB[p]||[]).forEach(function(b){if(String(b.id)===bid)blkObj=b;});});
+  if(blkObj){
+    if(blkObj.multiInputs && st.multiVals){
+      var txts = [];
+      blkObj.multiInputs.forEach(function(mi){
+         if(st.multiVals[mi.id]) txts.push(mi.lbl+': '+st.multiVals[mi.id]);
+      });
+      if(txts.length>0){
+        var ivDiv=document.createElement('div');
+        ivDiv.style.cssText='font-size:10px;font-weight:700;color:#15445A;margin-bottom:4px';
+        ivDiv.textContent = txts.join(' | ');
+        body.appendChild(ivDiv);
+      }
+    } else if(blkObj.inputLabel&&st.inputVal){
+      var ivDiv=document.createElement('div');
+      ivDiv.style.cssText='font-size:10px;font-weight:700;color:#15445A;margin-bottom:4px';
+      ivDiv.textContent=blkObj.inputLabel+': '+st.inputVal;
+      body.appendChild(ivDiv);
+    }
+  }
+  
+      if(st.actions && st.actions.length>0){
+        var wrap=document.createElement('div');wrap.className='sel-actions-wrap';
+        st.actions.forEach(function(a){
+          var tag=document.createElement('span');tag.className='sa-tag';
+          tag.innerHTML=a+' <button class="sa-remove no-print" onclick="removeAct(\''+bid+'\',\''+a.replace(/'/g,"\\'")+'\')">×</button>';
+          wrap.appendChild(tag);
+        });
+        body.appendChild(wrap);
+      } else {
+        var emptyMsg = document.createElement('div');
+        emptyMsg.className = 'no-print';
+        emptyMsg.style.cssText = 'font-size:11px; color:#999; text-align:center; padding:12px 5px; background:#f9f9f9; border-radius:6px; border:1px dashed #ddd; margin-top:5px; font-weight:600;';
+        emptyMsg.textContent = 'انقر على المستوى لإدراج الإجراء وفق المستوى أو كتابة إجراء مخصص وإدراجه';
+        body.appendChild(emptyMsg);
+      }
+    }
+
+function removeAct(bid,action){
+  if(!taskState[bid])return;
+  taskState[bid].actions=taskState[bid].actions.filter(function(a){return a!==action;});
+  syncBlockBody(bid);
+}
+
+function renderActItem(a, list) {
+    var isSel=selActs.indexOf(a)>-1;
+    var item=document.createElement('div');item.className='act-item'+(isSel?' sel':'');
+    item.onclick=function(){toggleAct(a,item);};
+    item.innerHTML='<div class="act-chk">'+(isSel?'✓':'')+'</div><div class="act-txt">'+a+'</div>';
+    list.appendChild(item);
+}
+
+function openActionsModal(bid){
+  var tt=getTaskType(bid);
+  if(tt==='visit'){
+    curActBlock=bid;
+    document.getElementById('v-teacher').value='';
+    document.getElementById('v-spec').value='';
+    document.getElementById('v-period').value='';
+    document.getElementById('v-class').value='';
+    document.getElementById('v-topic').value='';
+    document.getElementById('v-purpose').value='';
+    document.getElementById('v-feedback').value='';
+    openModal('modal-visit-form');
+    return;
+  }
+  
+  curActBlock=bid;
+  selActs=(taskState[bid]&&taskState[bid].actions)?taskState[bid].actions.slice():[];
+  var title=bid;
+  Object.keys(PB).forEach(function(p){(PB[p]||[]).forEach(function(b){if(String(b.id)===String(bid))title=b.title;});});
+  document.getElementById('am-task-name').textContent=title;
+  document.getElementById('custom-act-inp').value = '';
+  
+  var list=document.getElementById('am-act-list');list.innerHTML='';
+  
+  var lvl = taskState[bid].level || 'bl'; 
+  var actsObj = TASK_ACTS[tt] || TASK_ACTS.default;
+  var acts = actsObj[lvl] || actsObj.bl || TASK_ACTS.default.bl; 
+
+  acts.forEach(function(a){
+    renderActItem(a, list);
+  });
+  
+  selActs.forEach(function(a){
+      if(acts.indexOf(a) === -1) {
+          renderActItem(a, list);
+      }
+  });
+  
+  openModal('modal-actions');
+}
+
+function toggleAct(a,el){
+  var idx=selActs.indexOf(a);
+  if(idx>-1){
+      selActs.splice(idx,1);
+      el.classList.remove('sel');
+      el.querySelector('.act-chk').textContent='';
+  }
+  else{
+      if(selActs.length >= 3) {
+          toast('الحد الأقصى ٣ إجراءات فقط');
+          return;
+      }
+      selActs.push(a);
+      el.classList.add('sel');
+      el.querySelector('.act-chk').textContent='✓';
+  }
+}
+
+function addCustomAct() {
+    var inp = document.getElementById('custom-act-inp');
+    var val = inp.value.trim();
+    if(!val) return;
+    if(selActs.length >= 3) {
+        toast('الحد الأقصى ٣ إجراءات فقط');
+        return;
+    }
+    if(selActs.indexOf(val) === -1) {
+        selActs.push(val);
+        var list = document.getElementById('am-act-list');
+        renderActItem(val, list);
+        inp.value = '';
+    }
+}
+
+function confirmActions(){
+  if(curActBlock){taskState[curActBlock].actions=selActs.slice();syncBlockBody(curActBlock);}
+  closeModal('modal-actions');
+}
+
+function confirmVisitForm(){
+  var t=document.getElementById('v-teacher').value.trim()||'معلم';
+  var s=document.getElementById('v-spec').value.trim();
+  var p=document.getElementById('v-period').value.trim();
+  var c=document.getElementById('v-class').value.trim();
+  var top=document.getElementById('v-topic').value.trim();
+  var purp=document.getElementById('v-purpose').value;
+  var fb=document.getElementById('v-feedback').value.trim();
+
+  pushUndo();
+  
+  var targetPage = 1 + extraPages;
+  var visitsCount = 0;
+  
+  if (targetPage > 2 && PB[targetPage]) {
+      for(var i=0; i<PB[targetPage].length; i++){
+          if(PB[targetPage][i].title && PB[targetPage][i].title.indexOf('بيانات الزيارة الصفية') !== -1){
+              visitsCount++;
+          }
+      }
+  }
+  
+  if (targetPage === 2 || visitsCount >= 3) {
+      extraPages++;
+      targetPage = 1 + extraPages;
+      if(!PB[targetPage]) PB[targetPage] = [];
+  }
+  
+  var contentHtml = '';
+  if(s) contentHtml += '<strong>التخصص:</strong> '+s+' &nbsp;&nbsp;&nbsp; ';
+  if(c) contentHtml += '<strong>الصف:</strong> '+c+'<br>';
+  if(p) contentHtml += '<strong>الحصة:</strong> '+p+' &nbsp;&nbsp;&nbsp; ';
+  if(top) contentHtml += '<strong>موضوع الدرس:</strong> '+top+'<br>';
+  if(purp) contentHtml += '<strong>غرض الزيارة:</strong> '+purp+'<br>';
+
+  PB[targetPage].push({
+    id:Date.now(),
+    title:'بيانات الزيارة الصفية — '+t,
+    content:contentHtml,
+    cols:1,
+    type:'text'
+  });
+
+  if(fb){
+    PB[targetPage].push({
+      id:Date.now()+1,
+      title:'التغذية الراجعة والتوجيهات',
+      content:fb.replace(/\n/g,'<br>'),
+      cols:1,
+      type:'text'
+    });
+  }
+  
+  closeModal('modal-visit-form');
+  toast('تم إدراج بيانات الزيارة بنجاح');
+  lu();
+}
+
+function addFeedbackText(txt){
+  var fb = document.getElementById('v-feedback');
+  fb.value = fb.value ? fb.value + '\n' + txt : txt;
+}
+
+var HS={
+  white:{label:'أبيض رسمي',bg:'white',band:'linear-gradient(90deg,#07A869,#0DA9A6,#3D7EB9)',logo:function(){return LC;},tc:'#15445A'},
+  dark:{label:'كحلي',bg:'#15445A',band:'linear-gradient(90deg,#07A869,#0DA9A6,#3D7EB9)',logo:function(){return LW;},tc:'white'},
+  teal:{label:'تيل',bg:'linear-gradient(135deg,#0DA9A6,#07A869)',band:'linear-gradient(90deg,#15445A,#1d6080)',logo:function(){return LW;},tc:'white'},
+  green:{label:'أخضر',bg:'#07A869',band:'linear-gradient(90deg,#15445A,#0DA9A6)',logo:function(){return LW;},tc:'white'},
+  blue:{label:'أزرق',bg:'#3D7EB9',band:'linear-gradient(90deg,#07A869,#0DA9A6)',logo:function(){return LW;},tc:'white'},
+  grad:{label:'تدرج',bg:'linear-gradient(135deg,#15445A,#0DA9A6,#07A869)',band:'linear-gradient(90deg,#C1B48A,#07A869)',logo:function(){return LW;},tc:'white'}
+};
+var SZ={sm:{label:'صغير',pad:'7px 28px',lh:'50px'},md:{label:'متوسط',pad:'14px 28px',lh:'68px'},lg:{label:'كبير',pad:'22px 28px',lh:'88px'}};
+var FS={xs:'9px',sm:'10.5px',md:'12px',lg:'14px',xl:'16px'};
+
+var curJob=null,curGender='',curReport=null,isFree=false,extraPages=0,saveId=null;
+var rStyle='grad',rFont='Tajawal',rHdrSz='lg',rFontSz='md';
+var PB={1:[]};
+var s1Data=null,s2Data=null;
+var elType='text',elWidth='half',elImgSrc=null;
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});var el=document.getElementById('screen-'+id);if(el)el.classList.add('active');var hdr=document.getElementById('app-header');if(hdr)hdr.style.display=(id==='editor')?'flex':'none';}
+function goHome(){showScreen('welcome');}
+
+function loadSaved(){
+  var list=document.getElementById('saved-list'),cnt=document.getElementById('saved-count');
+  var saved=[];try{saved=JSON.parse(localStorage.getItem('moe_rpts')||'[]');}catch(e){}
+  if(cnt) cnt.textContent=saved.length?'('+saved.length+')':'';
+  if(!saved.length){if(list) list.innerHTML='<div class="saved-empty">لا توجد تقارير محفوظة بعد</div>';return;}
+  if(list) list.innerHTML=saved.map(function(s){return '<div class="saved-item"><span class="si-icon">📄</span><div class="si-info"><div class="si-name">'+s.name+'</div><div class="si-date">'+s.date+'</div></div><div class="si-actions"><button class="si-btn si-open" onclick="openSaved(\''+s.id+'\')">فتح</button><button class="si-btn si-del" onclick="delSaved(\''+s.id+'\')">حذف</button></div></div>';}).join('');
+}
+
+function deleteAllLocal() {
+    if (confirm('هل أنت متأكد من حذف جميع التقارير نهائياً؟')) {
+        localStorage.removeItem('moe_rpts');
+        loadSaved();
+        toast('تم حذف جميع التقارير');
+    }
+}
+
+function openSaved(id){
+  var saved=[];try{saved=JSON.parse(localStorage.getItem('moe_rpts')||'[]');}catch(e){}
+  var item=saved.find(function(s){return s.id===id;});if(!item)return;
+  saveId=id;var d=item.data;
+  curJob=d.curJob;curGender=d.curGender;curReport=d.curReport;isFree=d.isFree;
+  PB=d.PB||{1:[]};taskState=d.taskState||{};extraPages=d.extraPages||0;
+  rStyle=d.rStyle||'grad';rFont=d.rFont||'Tajawal';rHdrSz=d.rHdrSz||'lg';rFontSz=d.rFontSz||'md';
+  
+  wcDept=d.wcDept||'الإدارة العامة للتعليم';
+  wcSchool=d.wcSchool||'اسم المدرسة';
+  wcDirector=d.wcDirector||'';
+  wcReportTitle=d.wcReportTitle!==undefined?d.wcReportTitle:'قائمة مهام مدير المدرسة';
+  wcStaffRole=d.wcStaffRole||'المعلم';
+  wcTeacherName=d.wcTeacherName||'';
+  dateMode=d.dateMode||'h';
+  s1Data=d.s1Data||null;
+  s2Data=d.s2Data||null;
+  
+  setDateMode(dateMode);
+  document.getElementById('wc-dept').value = wcDept === 'الإدارة العامة للتعليم' ? '' : wcDept;
+  document.getElementById('wc-school').value = wcSchool === 'اسم المدرسة' ? '' : wcSchool;
+  var staffNameEl=document.getElementById('wc-staff-name');if(staffNameEl)staffNameEl.value=wcDirector;
+  var teacherEl=document.getElementById('wc-teacher-name');if(teacherEl)teacherEl.value=wcTeacherName;
+  var titleEl=document.getElementById('wc-report-title');if(titleEl)titleEl.value=wcReportTitle;
+  var roleSel=document.getElementById('wc-staff-role');
+  if(roleSel){
+    var found=false;
+    for(var i=0;i<roleSel.options.length;i++){if(roleSel.options[i].value===wcStaffRole){roleSel.selectedIndex=i;found=true;break;}}
+    if(!found && wcStaffRole){var opt=document.createElement('option');opt.value=wcStaffRole;opt.textContent=wcStaffRole;opt.selected=true;roleSel.appendChild(opt);}
+  }
+  document.getElementById('hdr-title').textContent=wcDept+(wcSchool?' — '+wcSchool:'');
+  document.getElementById('hdr-sub').textContent=wcDirector?'المدير: '+wcDirector:(wcReportTitle||'تقرير');
+  
+  document.getElementById('ed-name').textContent=d.edName||'التقرير';
+  buildFreeSb();
+  setTimeout(function(){
+    if(d.flds)Object.keys(d.flds).forEach(function(k){var e=document.getElementById(k);if(e)e.value=d.flds[k];});
+    if(s2Data){var cv=document.getElementById('sc2');if(cv){var ctx=cv.getContext('2d');var img=new Image();img.onload=function(){ctx.drawImage(img,0,0);};img.src=s2Data;}}
+    renderPrev();
+  },80);
+  showScreen('editor');
+}
+
+function delSaved(id){
+  var saved=[];try{saved=JSON.parse(localStorage.getItem('moe_rpts')||'[]');}catch(e){}
+  localStorage.setItem('moe_rpts',JSON.stringify(saved.filter(function(s){return s.id!==id;})));
+  loadSaved();toast('تم حذف التقرير');
+}
+
+function saveReport(){
+  document.getElementById('save-name-inp').value=fv('f_title')||'قائمة مهام مدير المدرسة';
+  openModal('modal-save');
+}
+
+function doSave(){
+  var name=document.getElementById('save-name-inp').value.trim()||'تقرير';
+  closeModal('modal-save');
+  var flds={};document.querySelectorAll('#sb-fields input.f-inp,#sb-fields textarea.f-ta').forEach(function(e){if(e.id)flds[e.id]=e.value;});
+  
+  document.querySelectorAll('.c-block').forEach(function(el){
+    var pnum = el.dataset.pnum;
+    var idx = el.dataset.idx;
+    var body = el.querySelector('.cb-body');
+    if(body && body.getAttribute('contenteditable') === 'true' && PB[pnum] && PB[pnum][idx]) {
+        PB[pnum][idx].content = body.innerHTML;
+    }
+  });
+  
+  var data={curJob:curJob,curGender:curGender,curReport:curReport,isFree:isFree,PB:PB,taskState:taskState,extraPages:extraPages,rStyle:rStyle,rFont:rFont,rHdrSz:rHdrSz,rFontSz:rFontSz,edName:document.getElementById('ed-name').textContent,flds:flds,wcDept:wcDept,wcSchool:wcSchool,wcDirector:wcDirector,dateMode:dateMode,s1Data:s1Data,s2Data:s2Data,wcReportTitle:wcReportTitle,wcStaffRole:wcStaffRole,wcTeacherName:wcTeacherName};
+  var saved=[];try{saved=JSON.parse(localStorage.getItem('moe_rpts')||'[]');}catch(e){}
+  var id=saveId||('r'+Date.now());saveId=id;
+  var idx=saved.findIndex(function(s){return s.id===id;});
+  var entry={id:id,name:name,date:new Date().toLocaleDateString('ar-SA'),data:data};
+  if(idx>=0)saved[idx]=entry;else saved.unshift(entry);
+  localStorage.setItem('moe_rpts',JSON.stringify(saved));
+  toast('✅ تم حفظ التقرير');
+}
+
+function sec(t,inner){return '<div class="f-sec"><div class="f-sec-title">'+t+'</div>'+inner+'</div>';}
+function fg(id,lbl,ph){return '<div class="f-grp"><label class="f-lbl">'+lbl+'</label><input class="f-inp" id="'+id+'" placeholder="'+ph+'" oninput="lu()"></div>';}
+function fv(id){var e=document.getElementById(id);return e?e.value:'';}
+function fp(id){var e=document.getElementById(id);return e?(e.value||e.placeholder||''):'';}
+
+function hdrSec(){
+  var st=Object.keys(HS).map(function(k){var v=HS[k];return '<div class="hs-opt'+(rStyle===k?' active':'')+'" onclick="setHS(\''+k+'\')"><div class="hs-preview" style="background:'+v.bg+'"></div><div class="hs-label">'+v.label+'</div></div>';}).join('');
+  var sz=Object.keys(SZ).map(function(k){return '<button class="hs-size-btn'+(rHdrSz===k?' active':'')+'" onclick="setSZ(\''+k+'\')">'+SZ[k].label+'</button>';}).join('');
+  return sec('تصميم الهيدر','<label class="f-lbl">نمط الهيدر</label><div class="hdr-styles">'+st+'</div><label class="f-lbl" style="margin-top:8px">حجم الهيدر</label><div class="hdr-size-row">'+sz+'</div>');
+}
+
+function fontSec(){
+  var fn=[['Tajawal','تجوال'],['Cairo','Cairo'],['Noto Kufi Arabic','Kufi'],['Amiri','أميري']];
+  var fsz=[['xs','XS'],['sm','S'],['md','M'],['lg','L'],['xl','XL']];
+  return sec('الخط وحجمه','<label class="f-lbl">نوع الخط</label><div class="fnt-btns">'+fn.map(function(x){return '<button class="fnt-btn'+(rFont===x[0]?' active':'')+'" onclick="setFont(\''+x[0]+'\')">'+x[1]+'</button>';}).join('')+'</div><label class="f-lbl" style="margin-top:8px">حجم الخط</label><div class="sz-btns">'+fsz.map(function(x){return '<button class="sz-btn'+(rFontSz===x[0]?' active':'')+'" onclick="setFSz(\''+x[0]+'\')">'+x[1]+'</button>';}).join('')+'</div>');
+}
+
+function sigSec(){
+  return sec('التوقيع','<div class="f-grp"><label class="f-lbl">التوقيع</label><div class="ig-row"><button class="ig-btn active" onclick="igC(this,\'f_sig2\',\'مدير المدرسة\')">مدير المدرسة</button><button class="ig-btn" onclick="igC(this,\'f_sig2\',\'مديرة المدرسة\')">مديرة المدرسة</button></div><div class="sig-canvas-wrap"><canvas id="sc2" width="280" height="60"></canvas><button class="sig-clear-btn" onclick="clrSig(2)">مسح</button></div></div>');
+}
+
+function buildFreeSb(){
+  var sb=document.getElementById('sb-fields');
+  var h=hdrSec();h+=fontSec();h+=sigSec();
+  sb.innerHTML=h;initSig();
+}
+
+function igC(btn,fid,lbl){btn.parentElement.querySelectorAll('.ig-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');var el=document.getElementById(fid);if(el)el.placeholder='/ '+lbl;lu();}
+function setHS(s){rStyle=s;document.querySelectorAll('.hs-opt').forEach(function(x){x.classList.toggle('active',x.getAttribute('onclick').indexOf("'"+s+"'")>-1);});lu();}
+function setSZ(s){rHdrSz=s;document.querySelectorAll('.hs-size-btn').forEach(function(x){x.classList.toggle('active',x.getAttribute('onclick').indexOf("'"+s+"'")>-1);});lu();}
+function setFont(f){rFont=f;document.querySelectorAll('.fnt-btn').forEach(function(x){x.classList.toggle('active',x.getAttribute('onclick').indexOf("'"+f+"'")>-1);});lu();}
+function setFSz(s){rFontSz=s;document.querySelectorAll('.sz-btn').forEach(function(x){x.classList.toggle('active',x.getAttribute('onclick').indexOf("'"+s+"'")>-1);});lu();}
+
+function initSig(){
+  [['sc2',2]].forEach(function(p){
+    var cv=document.getElementById(p[0]);if(!cv)return;
+    var ctx=cv.getContext('2d');ctx.strokeStyle='#15445A';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
+    var dr=false,lx=0,ly=0;
+    function pos(e){var r=cv.getBoundingClientRect();if(e.touches)return{x:(e.touches[0].clientX-r.left)*(cv.width/r.width),y:(e.touches[0].clientY-r.top)*(cv.height/r.height)};return{x:(e.clientX-r.left)*(cv.width/r.width),y:(e.clientY-r.top)*(cv.height/r.height)};}
+    cv.onmousedown=function(e){dr=true;var q=pos(e);lx=q.x;ly=q.y;};
+    cv.onmousemove=function(e){if(!dr)return;var q=pos(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(q.x,q.y);ctx.stroke();lx=q.x;ly=q.y;if(p[1]===1)s1Data=cv.toDataURL();else s2Data=cv.toDataURL();};
+    cv.onmouseup=cv.onmouseleave=function(){dr=false;};
+    cv.ontouchstart=function(e){e.preventDefault();dr=true;var q=pos(e);lx=q.x;ly=q.y;};
+    cv.ontouchmove=function(e){e.preventDefault();if(!dr)return;var q=pos(e);ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(q.x,q.y);ctx.stroke();lx=q.x;ly=q.y;if(p[1]===1)s1Data=cv.toDataURL();else s2Data=cv.toDataURL();};
+    cv.ontouchend=function(){dr=false;};
+  });
+}
+function clrSig(n){var c=document.getElementById('sc'+n);if(c)c.getContext('2d').clearRect(0,0,c.width,c.height);if(n===1)s1Data=null;else s2Data=null;}
+
+function openAddEl(){
+  elType='text';elWidth='half';elImgSrc=null;
+  document.getElementById('new-el-title').value='';document.getElementById('new-el-content').value='';
+  document.getElementById('el-img-prev').style.display='none';
+  document.getElementById('el-text-f').style.display='block';document.getElementById('el-img-f').style.display='none';
+  document.getElementById('el-t-text').classList.add('active');document.getElementById('el-t-img').classList.remove('active');
+  document.getElementById('elw-half').classList.add('active');document.getElementById('elw-full').classList.remove('active');
+  openModal('modal-add-el');
+}
+function selElType(t){elType=t;document.getElementById('el-t-text').classList.toggle('active',t==='text');document.getElementById('el-t-img').classList.toggle('active',t==='img');document.getElementById('el-text-f').style.display=t==='text'?'block':'none';document.getElementById('el-img-f').style.display=t==='img'?'block':'none';}
+function selElW(w){elWidth=w;document.getElementById('elw-half').classList.toggle('active',w==='half');document.getElementById('elw-full').classList.toggle('active',w==='full');}
+function previewElImg(inp){if(!inp.files[0])return;var r=new FileReader();r.onload=function(e){elImgSrc=e.target.result;document.getElementById('el-img-prev-img').src=elImgSrc;document.getElementById('el-img-prev').style.display='block';};r.readAsDataURL(inp.files[0]);}
+function confirmAddEl(){
+  if(!PB[1])PB[1]=[];
+  pushUndo();
+  if(elType==='text'){PB[1].push({id:Date.now(),title:document.getElementById('new-el-title').value.trim()||'قسم جديد',content:document.getElementById('new-el-content').value,cols:elWidth==='full'?2:1,type:'text'});}
+  else if(elType==='img'&&elImgSrc){PB[1].push({id:Date.now(),title:'صورة',content:'',cols:1,type:'img',imgSrc:elImgSrc});}
+  closeModal('modal-add-el');lu();
+}
+
+var undoStack=[];
+function pushUndo(){undoStack.push(JSON.stringify(PB));if(undoStack.length>20)undoStack.shift();}
+function undo(){if(!undoStack.length){toast('لا يوجد تراجع');return;}PB=JSON.parse(undoStack.pop());renderPrev();}
+function delBlock(pnum,idx){
+  pushUndo();
+  var pb=PB[pnum];if(!pb)return;
+  pb.splice(idx,1);
+  renderPrev();
+}
+
+function renderPrev(){
+  var area=document.getElementById('preview-area');area.innerHTML='';
+  var tb=document.createElement('div');tb.className='pg-toolbar';
+  tb.innerHTML='<div class="pg-tb-inner"><button class="pt-add" onclick="openAddEl()">➕ إضافة</button><button class="pt-btn" onclick="undo()" title="تراجع">↩ تراجع</button></div>';
+  area.appendChild(tb);
+  for(var p=1;p<=1+extraPages;p++)area.appendChild(buildPage(p));
+}
+
+function buildPage(num){
+  var h=HS[rStyle]||HS.grad,sz=SZ[rHdrSz]||SZ.lg,fs=FS[rFontSz]||FS.md;
+  var admin=wcDept||fv('f_admin')||'الإدارة العامة للتعليم',region=fv('f_region')||'',school=wcSchool||fv('f_school')||'مدرسة';
+  var year=dateMode==='h'?getHijri():getMiladi(),sem='';
+  var title=wcReportTitle;
+  /* توقيع المدير ثابت في وسط/يسار الفوتر — اللقب لا يتغير */
+  var s2l='مدير المدرسة';
+  var sig2=wcDirector?'/ '+wcDirector:'';
+
+  var page=document.createElement('div');page.className='a4-page';
+  page.style.fontFamily="'"+rFont+"',sans-serif";page.style.fontSize=fs;
+  page.innerHTML=
+    '<div class="top-band" style="background:'+h.band+'"></div>'+
+    '<div class="pg-hdr" style="background:'+h.bg+';padding:'+sz.pad+'">'+
+      '<div class="ph-r"><p style="color:'+h.tc+';font-size:10.5px">المملكة العربية السعودية<br>وزارة التعليم<br>'+admin+(region?'<br>'+region:'')+'<br>'+school+'</p></div>'+
+      '<div class="ph-c"><img src="'+h.logo()+'" style="height:'+sz.lh+'" alt="وزارة التعليم"></div>'+
+      '<div class="ph-l"><p style="color:'+h.tc+';font-size:10.5px">'+year+'<br>'+sem+'</p></div>'+
+    '</div>'+
+    (title?(num===1?'<div class="rpt-title-box">'+title+'</div>':'<div style="margin:7px 28px;text-align:center;font-size:11px;color:#999;font-weight:600">'+title+' — صفحة '+num+'</div>'):(num>1?'<div style="margin:7px 28px;text-align:center;font-size:11px;color:#999;font-weight:600">صفحة '+num+'</div>':''));
+
+  var content=document.createElement('div');content.className='page-content';page.appendChild(content);
+  var blocks=PB[num]||[];var i=0;
+  while(i<blocks.length){
+    var b=blocks[i];
+    if(b.cols===2||i+1>=blocks.length){content.appendChild(mkRow([b],num,i,fs));i++;}
+    else{content.appendChild(mkRow([b,blocks[i+1]],num,i,fs));i+=2;}
+  }
+  var addRow=document.createElement('div');addRow.className='add-el-row no-print';
+  var addBtn=document.createElement('button');addBtn.className='add-el-btn';addBtn.textContent='➕ إضافة عنصر جديد';addBtn.onclick=openAddEl;
+  addRow.appendChild(addBtn);content.appendChild(addRow);
+
+  var foot=document.createElement('div');foot.className='page-footer';
+  /* يمين الفوتر: اسم المعلم — يختفي تماماً إذا لم يُكتب اسم */
+  var teacherFoot = wcTeacherName
+    ? '<div class="footer-sig">'+(wcStaffRole||'المعلم')+'<div class="sig-line"></div>/ '+wcTeacherName+'</div>'
+    : '<div></div>';
+  foot.innerHTML=teacherFoot+'<div class="footer-sig">'+(s2Data?'<img src="'+s2Data+'" style="height:28px;display:block;margin:0 auto 2px">':'')+s2l+'<div class="sig-line"></div>'+sig2+'</div>';
+  page.appendChild(foot);
+  var bot=document.createElement('div');bot.className='bot-band';bot.style.background=h.band;page.appendChild(bot);
+  return page;
+}
+
+function mkRow(blocks,pnum,si,fs){
+  var row=document.createElement('div');row.className='c-row '+(blocks.length===2?'col2':'col1');
+  blocks.forEach(function(b,ri){
+    var el=document.createElement('div');el.className='c-block';el.dataset.idx=si+ri;el.dataset.pnum=pnum;
+    if(b.isTask){var bid0=String(b.id);initTS(bid0);var lv0=taskState[bid0]?taskState[bid0].level:null;if(lv0==='ex'){el.style.borderColor='#07A869';el.style.boxShadow='inset 0 0 0 2px #07A869';}else if(lv0==='gd'){el.style.borderColor='#0DA9A6';el.style.boxShadow='inset 0 0 0 2px #0DA9A6';}else if(lv0==='bl'){el.style.borderColor='#E8820C';el.style.boxShadow='inset 0 0 0 2px #E8820C';}}
+    if(b.type==='img'){
+      var img=document.createElement('img');img.className='block-img';img.src=b.imgSrc||'';img.style.height='160px';el.appendChild(img);
+      var imgCtrl=document.createElement('div');imgCtrl.style.cssText='position:absolute;top:4px;left:4px;display:flex;gap:3px';
+      var delI=document.createElement('button');delI.textContent='🗑';delI.title='حذف';delI.className='no-print';delI.style.cssText='background:rgba(200,40,40,.85);color:white;border:none;border-radius:4px;padding:2px 6px;cursor:pointer;font-size:11px';
+      delI.onclick=function(e){e.stopPropagation();pushUndo();PB[pnum].splice(si+ri,1);renderPrev();};
+      imgCtrl.appendChild(delI);el.appendChild(imgCtrl);
+    } else {
+      var bv=(b.rptId?fv('f_'+b.rptId):(b.content||'')).replace(/\n/g,'<br>');
+      var head=document.createElement('div');head.className='cb-head';
+      head.style.display='flex';head.style.alignItems='center';
+      var titleSpan=document.createElement('span');titleSpan.textContent='◆ '+(b.title||'');titleSpan.style.cssText='flex:1;cursor:text';
+      titleSpan.ondblclick=function(){
+        var cur=titleSpan.textContent.replace('◆ ','');
+        var newName=prompt('اسم القسم:',cur);
+        if(newName&&newName.trim()){pushUndo();PB[pnum][si+ri].title=newName.trim();renderPrev();}
+      };
+      head.appendChild(titleSpan);
+      /* أزرار المستويات لخلايا المهام */
+      if(b.isTask){
+        var bid=String(b.id);
+        initTS(bid);
+        var tt=b.taskType||'default';
+        var lvls=TASK_LEVELS[tt]||TASK_LEVELS.default;
+        /* خانة الإدخال الرقمي */
+        if(b.inputLabel || b.multiInputs){
+          var inpWrap=document.createElement('div');inpWrap.style.cssText='display:flex;align-items:center;gap:4px;margin-left:6px';
+          if (b.multiInputs) {
+            b.multiInputs.forEach(function(mi, idx){
+              if(idx>0){
+                var sep=document.createElement('span');sep.textContent='|';sep.style.cssText='font-size:11px;color:#15445A;font-weight:700;margin:0 2px';
+                inpWrap.appendChild(sep);
+              }
+              var inpLbl=document.createElement('span');inpLbl.textContent=mi.lbl+':';inpLbl.style.cssText='font-size:10px;color:#15445A;font-weight:700;white-space:nowrap';
+              var inpNum=document.createElement('input');inpNum.type='text';inpNum.id='inp-'+bid+'-'+mi.id;
+              inpNum.style.cssText='width:36px;padding:2px 5px;border-radius:4px;border:1px solid #b0c4cf;background:white;color:#15445A;font-family:Tajawal,sans-serif;font-size:11px;font-weight:700;text-align:center;outline:none';
+              inpNum.placeholder='٠٠';
+              if(taskState[bid]&&taskState[bid].multiVals&&taskState[bid].multiVals[mi.id])inpNum.value=taskState[bid].multiVals[mi.id];
+              inpNum.onclick=function(e){e.stopPropagation();};
+              inpNum.oninput=(function(bi, mId){return function(){if(!taskState[bi])taskState[bi]={level:null,note:'',actions:[],multiVals:{}};if(!taskState[bi].multiVals)taskState[bi].multiVals={};taskState[bi].multiVals[mId]=this.value;};})(bid, mi.id);
+              inpWrap.appendChild(inpLbl);inpWrap.appendChild(inpNum);
+            });
+          } else {
+            var inpLbl=document.createElement('span');inpLbl.textContent=b.inputLabel+':';inpLbl.style.cssText='font-size:10px;color:#15445A;font-weight:700;white-space:nowrap';
+            var inpNum=document.createElement('input');inpNum.type='text';inpNum.id='inp-'+bid;
+            inpNum.style.cssText='padding:2px 5px;border-radius:4px;border:1px solid #b0c4cf;background:white;color:#15445A;font-family:Tajawal,sans-serif;font-size:11px;font-weight:700;text-align:center;outline:none';
+            if(tt==='huduri'||tt==='noor'){inpNum.placeholder='٠٠/٠٠';inpNum.style.width='64px';}else{inpNum.placeholder='٠٠';inpNum.style.width='40px';}
+            if(taskState[bid]&&taskState[bid].inputVal)inpNum.value=taskState[bid].inputVal;
+            inpNum.onclick=function(e){e.stopPropagation();};
+            inpNum.oninput=(function(bi){return function(){if(!taskState[bi])taskState[bi]={level:null,note:'',actions:[]};taskState[bi].inputVal=this.value;};})(bid);
+            inpWrap.appendChild(inpLbl);inpWrap.appendChild(inpNum);
+          }
+          head.appendChild(inpWrap);
+        }
+        var lvWrap=document.createElement('div');lvWrap.className='task-levels';
+        lvls.forEach(function(pair){
+          var btn=document.createElement('button');
+          btn.className='tl-btn tl-'+pair[0];btn.id='tl-'+pair[0]+'-'+bid;btn.textContent=pair[1];
+          var st=taskState[bid];if(st&&st.level===pair[0])btn.classList.add('on');
+          btn.onclick=(function(k){return function(e){e.stopPropagation();setTaskLevel(bid,k);};})(pair[0]);
+          lvWrap.appendChild(btn);
+        });
+        head.appendChild(lvWrap);
+      }
+      var delBtn=document.createElement('button');delBtn.textContent='×';delBtn.title='حذف القسم';
+      delBtn.className='no-print';delBtn.style.cssText='background:rgba(255,255,255,.2);color:white;border:none;border-radius:3px;padding:0 5px;cursor:pointer;font-size:14px;font-weight:700;margin-right:4px;line-height:1.4';
+      delBtn.onclick=function(e){e.stopPropagation();delBlock(pnum,si+ri);};
+      head.appendChild(delBtn);
+      var body=document.createElement('div');body.className='cb-body';body.spellcheck=false;body.style.fontSize=fs;
+      if(b.isTask){
+        var bid2=String(b.id);
+        body.id='tb-'+bid2;body.contentEditable='false';
+        syncBlockBody(bid2, body);
+      } else {
+        body.contentEditable='true';body.innerHTML=bv;
+        body.oninput = function() { PB[pnum][si+ri].content = this.innerHTML; };
+        body.onblur = function() { PB[pnum][si+ri].content = this.innerHTML; };
+      }
+      el.appendChild(head);el.appendChild(body);
+    }
+    var rh=document.createElement('div');rh.className='resize-h';
+    var sy=0,sh=0,rs=false;
+    rh.onmousedown=function(e){rs=true;sy=e.clientY;sh=el.offsetHeight;e.preventDefault();e.stopPropagation();};
+    document.addEventListener('mousemove',function(e){if(!rs)return;el.style.height=Math.max(50,sh+(e.clientY-sy))+'px';});
+    document.addEventListener('mouseup',function(){rs=false;});
+    el.appendChild(rh);row.appendChild(el);
+  });
+  return row;
+}
+
+function addPage(){extraPages++;if(!PB[1+extraPages])PB[1+extraPages]=[];renderPrev();}
+
+function generateSardAndStats() {
+  pushUndo();
+  var school = wcSchool || document.getElementById('wc-school').value || 'المدرسة';
+  var date = document.getElementById('wc-date').textContent;
+
+  var getLvl = function(bid) {
+    if(!taskState[bid] || !taskState[bid].level) return 'غير مقيم';
+    var tt = getTaskType(bid);
+    var lvls = TASK_LEVELS[tt] || TASK_LEVELS.default;
+    var match = lvls.find(function(l) { return l[0] === taskState[bid].level; });
+    return match ? match[1] : 'غير مقيم';
+  };
+  var getAct = function(bid) {
+    if(!taskState[bid] || !taskState[bid].actions || taskState[bid].actions.length===0) return '';
+    return ' (الإجراءات المتخذة: ' + taskState[bid].actions.join('، ') + ')';
+  };
+  var getNote = function(bid) {
+    if(!taskState[bid] || !taskState[bid].note) return '';
+    return ' ملاحظة: ' + taskState[bid].note;
+  };
+  var getInp = function(bid) {
+    if(!taskState[bid] || !taskState[bid].inputVal) return '٠';
+    return taskState[bid].inputVal;
+  };
+  var getM = function(bid, k) {
+    if(!taskState[bid] || !taskState[bid].multiVals || !taskState[bid].multiVals[k]) return '٠';
+    return taskState[bid].multiVals[k];
+  };
+
+  var narrativeHtml = '<div style="line-height:2.2; font-size:14px; text-align:justify;">' +
+    '<p><strong>بسم الله الرحمن الرحيم</strong></p>' +
+    '<p>إنه في يوم <strong>' + date + '</strong>، وخلال سير اليوم الدراسي في مدرسة <strong>' + school + '</strong>، تم رصد وتقييم الأداء العام وفقاً للمهام اليومية، وقد تبين ما يلي:</p>' +
+    '<p>خلال اليوم الدراسي وبالنظر لفعاليات الاصطفاف الصباحي، فقد كان تفاعل الطلاب بمستوى <strong>(' + getLvl('1001') + ')</strong>' + getNote('1001') + '، بينما سُجل تفاعل المعلمين بمستوى <strong>(' + getLvl('1002') + ')</strong>' + getNote('1002') + '.</p>' +
+    '<p>وفيما يخص انضباط الهيئة التعليمية والإدارية (عبر نظام حضوري)، فقد تم حصر حضور <strong>(' + getM('1003','att') + ')</strong>، وغياب <strong>(' + getM('1003','abs') + ')</strong>، ليكون التقييم العام للانضباط بمستوى <strong>(' + getLvl('1003') + ')</strong>.' + getAct('1003') + '</p>' +
+    '<p>أما على صعيد الانضباط اليومي للطلاب (عبر نظام نور)، فقد تم رصد حضور <strong>(' + getM('1004','att') + ')</strong> طالباً، وغياب <strong>(' + getM('1004','abs') + ')</strong> طالباً، وجاء مستوى الانضباط <strong>(' + getLvl('1004') + ')</strong>.' + getAct('1004') + '</p>' +
+    '<p>وفي إطار التواصل مع الأسرة والمجتمع (مواعيد مدرستي)، تم التعامل مع عدد <strong>(' + getInp('1005') + ')</strong> حجوزات/مواعيد، وكان مستوى النشاط <strong>(' + getLvl('1005') + ')</strong>.' + getAct('1005') + '</p>' +
+    '<p>وبمتابعة إجراءات الموارد البشرية (نظام فارس)، تم رصد عدد <strong>(' + getInp('1006') + ')</strong> إجراءً، وحالة الإنجاز تُعد <strong>(' + getLvl('1006') + ')</strong>. كما تم التعامل مع الدعم الموحد بعدد <strong>(' + getInp('1007') + ')</strong> تذاكر، ومستوى المعالجة الحالي <strong>(' + getLvl('1007') + ')</strong>.</p>' +
+    '<p>ومن خلال المرور والمتابعة لمهام الإشراف والمناوبة وحصص الاحتياط، فقد كانت التغطية بمستوى <strong>(' + getLvl('1008') + ')</strong>.' + getAct('1008') + '</p>' +
+    '<p>وفيما يتعلق بعمليات التدريس والزيارات الصفية، فقد تم تقييمها بمستوى <strong>(' + getLvl('1009') + ')</strong>.' + getAct('1009') + '</p>' +
+    '<p>وأخيراً، بشأن الاجتماع بلجان المدرسة، فإن حالة الاجتماعات تُعد <strong>(' + getLvl('1010') + ')</strong>.' + getAct('1010') + '</p>' +
+    '<p>هذا ما لزم تدوينه لتوثيق سير العمل اليومي، والله الموفق.</p>' +
+    '</div>';
+
+  var counts = { ex: 0, gd: 0, bl: 0, total: 0 };
+  ['1001','1002','1003','1004','1005','1006','1007','1008','1009','1010'].forEach(function(id) {
+    if(taskState[id] && taskState[id].level) {
+      counts[taskState[id].level]++;
+      counts.total++;
+    }
+  });
+  var pEx = counts.total ? Math.round((counts.ex/counts.total)*100) : 0;
+  var pGd = counts.total ? Math.round((counts.gd/counts.total)*100) : 0;
+  var pBl = counts.total ? Math.round((counts.bl/counts.total)*100) : 0;
+
+  var tAtt = parseInt(getM('1003','att'))||0;
+  var tAbs = parseInt(getM('1003','abs'))||0;
+  var tTotal = tAtt + tAbs;
+  var ptAtt = tTotal ? Math.round((tAtt/tTotal)*100) : 0;
+  var ptAbs = tTotal ? Math.round((tAbs/tTotal)*100) : 0;
+
+  var sAtt = parseInt(getM('1004','att'))||0;
+  var sAbs = parseInt(getM('1004','abs'))||0;
+  var sTotal = sAtt + sAbs;
+  var psAtt = sTotal ? Math.round((sAtt/sTotal)*100) : 0;
+  var psAbs = sTotal ? Math.round((sAbs/sTotal)*100) : 0;
+
+  var statsHtml = '<div style="font-family: Tajawal, sans-serif;">' +
+    '<div style="margin-bottom:35px; padding:20px; background:#fcfcfc; border-radius:12px; border:1px solid #eee;">' +
+      '<div style="font-size:16px; font-weight:800; margin-bottom:12px; color:#15445A;">نسبة التقييم لمهام اليوم</div>' +
+      '<div style="display:flex; height:36px; border-radius:18px; overflow:hidden; background:#eee; box-shadow:inset 0 2px 5px rgba(0,0,0,0.05);">' +
+        '<div style="width:' + pEx + '%; background:#07A869; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (pEx>0?pEx+'%':'') + '</div>' +
+        '<div style="width:' + pGd + '%; background:#0DA9A6; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (pGd>0?pGd+'%':'') + '</div>' +
+        '<div style="width:' + pBl + '%; background:#E8820C; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (pBl>0?pBl+'%':'') + '</div>' +
+      '</div>' +
+      '<div style="display:flex; justify-content:center; gap:25px; margin-top:15px; font-size:14px; font-weight:600; color:#555;">' +
+        '<span style="display:flex; align-items:center; gap:6px;"><span style="width:14px; height:14px; background:#07A869; border-radius:50%;"></span> مستوى عالٍ</span>' +
+        '<span style="display:flex; align-items:center; gap:6px;"><span style="width:14px; height:14px; background:#0DA9A6; border-radius:50%;"></span> مستوى متوسط</span>' +
+        '<span style="display:flex; align-items:center; gap:6px;"><span style="width:14px; height:14px; background:#E8820C; border-radius:50%;"></span> يحتاج تحسين</span>' +
+      '</div>' +
+    '</div>' +
+    '<div style="display:grid; grid-template-columns:1fr 1fr; gap:25px; margin-top:20px;">' +
+      '<div style="border:1.5px solid #e0e0e0; border-radius:12px; padding:25px 15px; text-align:center; background:white; box-shadow:0 4px 15px rgba(0,0,0,0.03);">' +
+        '<div style="font-size:16px; font-weight:800; color:#15445A; margin-bottom:12px;">انضباط المعلمين (حضوري)</div>' +
+        '<div style="font-size:13px; color:#555; margin-bottom:15px; font-weight:700;">إجمالي: ' + tTotal + '</div>' +
+        '<div style="display:flex; height:36px; border-radius:18px; overflow:hidden; background:#eee; box-shadow:inset 0 2px 5px rgba(0,0,0,0.05);">' +
+          '<div style="width:' + ptAtt + '%; background:#07A869; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (ptAtt>0?ptAtt+'%':'') + '</div>' +
+          '<div style="width:' + ptAbs + '%; background:#e8820c; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (ptAbs>0?ptAbs+'%':'') + '</div>' +
+        '</div>' +
+        '<div style="display:flex; justify-content:center; gap:20px; margin-top:20px; font-size:14px;">' +
+          '<span style="color:#07A869; font-weight:800;">حضور: ' + tAtt + '</span>' +
+          '<span style="color:#e8820c; font-weight:800;">غياب: ' + tAbs + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div style="border:1.5px solid #e0e0e0; border-radius:12px; padding:25px 15px; text-align:center; background:white; box-shadow:0 4px 15px rgba(0,0,0,0.03);">' +
+        '<div style="font-size:16px; font-weight:800; color:#15445A; margin-bottom:12px;">انضباط الطلاب (نور)</div>' +
+        '<div style="font-size:13px; color:#555; margin-bottom:15px; font-weight:700;">إجمالي: ' + sTotal + '</div>' +
+        '<div style="display:flex; height:36px; border-radius:18px; overflow:hidden; background:#eee; box-shadow:inset 0 2px 5px rgba(0,0,0,0.05);">' +
+          '<div style="width:' + psAtt + '%; background:#07A869; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (psAtt>0?psAtt+'%':'') + '</div>' +
+          '<div style="width:' + psAbs + '%; background:#e8820c; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (psAbs>0?psAbs+'%':'') + '</div>' +
+        '</div>' +
+        '<div style="display:flex; justify-content:center; gap:20px; margin-top:20px; font-size:14px;">' +
+          '<span style="color:#07A869; font-weight:800;">حضور: ' + sAtt + '</span>' +
+          '<span style="color:#e8820c; font-weight:800;">غياب: ' + sAbs + '</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+
+  extraPages++;
+  var narPageNum = 1 + extraPages;
+  if(!PB[narPageNum]) PB[narPageNum] = [];
+  PB[narPageNum].push({
+    id: Date.now(),
+    title: 'الاعتماد والسرد النصي لمجريات اليوم',
+    content: narrativeHtml,
+    cols: 1,
+    type: 'text'
+  });
+
+  extraPages++;
+  var statPageNum = 1 + extraPages;
+  if(!PB[statPageNum]) PB[statPageNum] = [];
+  PB[statPageNum].push({
+    id: Date.now() + 1,
+    title: 'التقرير الإحصائي',
+    content: statsHtml,
+    cols: 1,
+    type: 'text'
+  });
+
+  toast('تم توليد التقرير السردي والإحصائي بنجاح!');
+  lu();
+}
+
+var _t=null;
+function lu(){clearTimeout(_t);_t=setTimeout(renderPrev,260);}
+
+async function downloadPDF(){
+  showOv('جاري تحضير PDF...','يرجى الانتظار');
+  document.querySelectorAll('.a4-page textarea').forEach(function(el){ el.innerHTML = el.value.replace(/\n/g, '<br>'); });
+  document.querySelectorAll('.a4-page input').forEach(function(el){ el.setAttribute('value', el.value); });
+  document.querySelectorAll('.no-print').forEach(function(el){el.style.display='none';});
+  document.querySelectorAll('.tl-btn:not(.on)').forEach(function(el){el.style.display='none';});
+  await new Promise(function(r){setTimeout(r,400);});
+  try{
+    var jsPDF=window.jspdf.jsPDF;
+    var pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    var pages=document.querySelectorAll('.a4-page');
+    for(var i=0;i<pages.length;i++){
+      if(i>0)pdf.addPage();
+      document.getElementById('ov-text').textContent='معالجة صفحة '+(i+1)+' من '+pages.length+'...';
+      var canvas=await html2canvas(pages[i],{scale:2,useCORS:true,allowTaint:false,logging:false});
+      pdf.addImage(canvas.toDataURL('image/jpeg',.92),'JPEG',0,0,210,297);
+    }
+    pdf.save((fv('f_title')||'تقرير')+'.pdf');
+  }catch(e){
+    document.getElementById('ov-title').textContent='حدث خطأ';
+    document.getElementById('ov-text').textContent=e.message;
+    document.getElementById('ov-close').style.display='inline-block';
+    document.getElementById('ov-spin').style.display='none';
+    return;
+  }finally{
+    document.querySelectorAll('.no-print').forEach(function(el){el.style.display='';});
+    document.querySelectorAll('.tl-btn:not(.on)').forEach(function(el){el.style.display='';});
+  }
+  closeOv();
+}
+
+function openModal(id){document.getElementById(id).classList.add('active');}
+function closeModal(id){document.getElementById(id).classList.remove('active');}
+function showOv(t,tx){document.getElementById('ov-title').textContent=t;document.getElementById('ov-text').textContent=tx;document.getElementById('ov-close').style.display='none';document.getElementById('ov-spin').style.display='block';document.getElementById('overlay').classList.add('active');}
+function closeOv(){document.getElementById('overlay').classList.remove('active');}
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2800);}
+
+loadSaved();
+</script>
+</body>
+</html>
