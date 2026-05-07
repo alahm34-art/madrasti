@@ -1210,8 +1210,10 @@ function mkRow(blocks,pnum,si,fs){
         head.appendChild(lvWrap);
       }
       var delBtn=document.createElement('button');delBtn.textContent='×';delBtn.title='حذف القسم';
-      delBtn.className='no-print';delBtn.style.cssText='background:rgba(255,255,255,.2);color:white;border:none;border-radius:3px;padding:0 5px;cursor:pointer;font-size:14px;font-weight:700;margin-right:4px;line-height:1.4';
-      delBtn.onclick=function(e){e.stopPropagation();delBlock(pnum,si+ri);};
+      delBtn.className='no-print del-block-btn';delBtn.style.cssText='background:#fee;color:#c44;border:1.5px solid #f5a5a5;border-radius:5px;padding:0 8px;cursor:pointer;font-size:18px;font-weight:900;margin-right:6px;line-height:1.2;min-width:26px;min-height:26px;display:flex;align-items:center;justify-content:center;transition:all .15s';
+      delBtn.onmouseover=function(){this.style.background='#c44';this.style.color='white';this.style.borderColor='#c44';};
+      delBtn.onmouseout=function(){this.style.background='#fee';this.style.color='#c44';this.style.borderColor='#f5a5a5';};
+      delBtn.onclick=function(e){e.stopPropagation();if(confirm('هل تريد حذف هذا العنصر؟'))delBlock(pnum,si+ri);};
       head.appendChild(delBtn);
       var body=document.createElement('div');body.className='cb-body';body.spellcheck=false;body.style.fontSize=fs;
       if(b.isTask){
