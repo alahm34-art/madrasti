@@ -113,7 +113,13 @@ body{font-family:"Tajawal",sans-serif;background:#eef1f5;color:#1a2a35;min-heigh
 .cb-head::after{content:"";position:absolute;bottom:0;right:0;left:0;height:2px;background:linear-gradient(90deg,#07A869,#0DA9A6)}
 .cb-body{padding:8px 10px;line-height:1.9;color:#333;min-height:50px;outline:none}
 .cb-body:focus{background:#fafff8}
-.c-block img.block-img{width:100%;display:block;object-fit:cover}
+.c-block img.block-img{width:100%;display:block;object-fit:contain;max-height:280px;background:#f5f5f5}
+/* قواعد كتلة الشواهد المتعددة */
+.imgs-block-wrap{break-inside:avoid;page-break-inside:avoid}
+@media print{
+  .imgs-block-wrap{page-break-inside:avoid !important;break-inside:avoid !important}
+  .imgs-block-wrap img{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
 .c-block.dragging{opacity:.4}
 .c-block.drag-top{border-top:3px solid var(--teal)}
 .c-block.drag-bot{border-bottom:3px solid var(--teal)}
@@ -130,7 +136,7 @@ body{font-family:"Tajawal",sans-serif;background:#eef1f5;color:#1a2a35;min-heigh
 .sig-clear-btn{position:absolute;top:3px;left:3px;background:rgba(200,40,40,.8);color:white;border:none;border-radius:3px;padding:2px 6px;font-size:10px;cursor:pointer;font-family:"Tajawal",sans-serif}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center}
 .modal-overlay.active{display:flex}
-.modal-box{background:white;border-radius:16px;padding:24px;max-width:460px;width:92%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.modal-box{background:white;border-radius:16px;padding:24px;max-width:460px;width:92%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto}
 .modal-icon{font-size:38px;margin-bottom:9px}
 .modal-title{font-size:17px;font-weight:800;color:var(--dark);margin-bottom:7px}
 .modal-text{font-size:13px;color:#666;line-height:1.7;margin-bottom:16px}
@@ -225,6 +231,11 @@ body{font-family:"Tajawal",sans-serif;background:#eef1f5;color:#1a2a35;min-heigh
 .t-chip-clear{border-style:dashed;color:#999}
 .t-chip-clear:hover{border-color:#c44;background:#fee;color:#c44}
 
+/* ══ أزرار قالب المهام (مدير/معلم) ══ */
+.rt-btn{padding:8px 10px;border-radius:7px;border:1.5px solid #dde8ee;background:white;font-family:"Tajawal",sans-serif;font-size:12px;font-weight:800;color:#5a7280;cursor:pointer;transition:all .15s;min-height:36px}
+.rt-btn:hover{border-color:var(--teal);background:#e8f9f9;color:var(--dark)}
+.rt-btn.active{background:linear-gradient(135deg,var(--dark),var(--teal));color:white;border-color:var(--dark);box-shadow:0 3px 10px rgba(21,68,90,.25)}
+
 /* ══ أزرار المستويات داخل رأس الـ block ══ */
 .task-levels{display:flex;gap:4px;flex-shrink:0}
 .tl-btn{padding:3px 8px;border-radius:5px;border:1.5px solid;font-family:"Tajawal",sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap;background:rgba(255,255,255,.12);line-height:1.5}
@@ -240,7 +251,7 @@ body{font-family:"Tajawal",sans-serif;background:#eef1f5;color:#1a2a35;min-heigh
 .sa-tag{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#e8f9f9;border:1px solid var(--teal);border-radius:12px;font-size:10px;font-weight:700;color:var(--dark)}
 .sa-remove{background:none;border:none;cursor:pointer;color:var(--teal);font-size:12px;line-height:1;padding:0}
 /* modal الإجراءات */
-.am-box{background:white;border-radius:14px;padding:22px;max-width:450px;width:92%;box-shadow:0 8px 32px rgba(0,0,0,.2);direction:rtl}
+.am-box{background:white;border-radius:14px;padding:22px;max-width:450px;width:92%;box-shadow:0 8px 32px rgba(0,0,0,.2);direction:rtl;max-height:88vh;overflow-y:auto}
 .am-hd{font-size:15px;font-weight:800;color:var(--dark);margin-bottom:3px}
 .am-sub{font-size:11px;color:#999;margin-bottom:11px}
 .am-name{background:#f0fafa;border-radius:7px;padding:7px 11px;font-size:12px;font-weight:700;color:var(--dark);margin-bottom:12px;border:1px solid #cceee}
@@ -299,34 +310,27 @@ body{font-family:"Tajawal",sans-serif;background:#eef1f5;color:#1a2a35;min-heigh
       <div class="tasks-title-wrap" style="background:#f5f8fa;border-radius:10px;border:1.5px solid #dde8ee;margin-bottom:8px;overflow:hidden;position:relative">
         <input class="wc-inp" id="wc-report-title" placeholder="✏️ اكتب عنوان التقرير... (مثال: قائمة مهام مدير المدرسة)" value="قائمة مهام مدير المدرسة" style="text-align:center;font-size:15px;font-weight:900;color:var(--dark);border:none;background:transparent;padding:12px;border-radius:0">
       </div>
-      <div class="title-chips" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;justify-content:center">
-        <button type="button" class="t-chip" onclick="setReportTitle('قائمة مهام مدير المدرسة')">مدير</button>
-        <button type="button" class="t-chip" onclick="setReportTitle('قائمة مهام وكيل المدرسة')">وكيل</button>
-        <button type="button" class="t-chip" onclick="setReportTitle('قائمة مهام المرشد الطلابي')">مرشد طلابي</button>
-        <button type="button" class="t-chip" onclick="setReportTitle('قائمة مهام رائد النشاط')">رائد نشاط</button>
-        <button type="button" class="t-chip" onclick="setReportTitle('قائمة مهام المعلم')">معلم</button>
-        <button type="button" class="t-chip" onclick="setReportTitle('قائمة مهام الموجه')">موجه</button>
-        <button type="button" class="t-chip t-chip-clear" onclick="setReportTitle('')" title="إخفاء العنوان">بدون عنوان</button>
+      <!-- ══ إعادة هيكلة: قالب موحّد لكل تقرير = شخص واحد + دور واحد ══ -->
+      <div class="role-toggle" style="display:grid;grid-template-columns:auto repeat(6,1fr);gap:5px;margin-bottom:9px;background:#fff8eb;border:1.5px dashed #f5d896;border-radius:9px;padding:6px;align-items:center">
+        <span style="font-size:11px;color:#7a5b1a;font-weight:700;padding:0 6px;flex-shrink:0">👤 الدور:</span>
+        <button type="button" class="rt-btn" id="rt-mgr" onclick="setTplMode('mgr')">مدير</button>
+        <button type="button" class="rt-btn" id="rt-vc" onclick="setTplMode('vc')">وكيل</button>
+        <button type="button" class="rt-btn" id="rt-cs" onclick="setTplMode('cs')">موجه طلابي</button>
+        <button type="button" class="rt-btn" id="rt-act" onclick="setTplMode('act')">رائد نشاط</button>
+        <button type="button" class="rt-btn active" id="rt-tc" onclick="setTplMode('tc')">معلم</button>
+        <button type="button" class="rt-btn" id="rt-admin" onclick="setTplMode('admin')">إداري</button>
       </div>
-      <div class="staff-row" style="display:grid;grid-template-columns:130px 1fr;gap:7px;margin-bottom:9px;align-items:center">
-        <label class="wc-lbl" style="padding:0 5px;font-size:12px;color:var(--dark);font-weight:700;background:#f0f4f8;border-radius:7px;text-align:center;line-height:38px">🏫 مدير المدرسة</label>
-        <input class="wc-inp" id="wc-staff-name" placeholder="اسم المدير (اختياري)">
-      </div>
+      <!-- مسمى دقيق + جنس (مذكر/مؤنث) -->
       <div class="teacher-row" style="display:grid;grid-template-columns:130px 1fr;gap:7px;margin-bottom:9px">
         <select class="wc-inp" id="wc-staff-role" style="cursor:pointer;padding:9px 8px;font-size:12px;font-weight:700">
           <option value="المعلم">معلم</option>
-          <option value="المعلمة">معلمة</option>
-          <option value="الموجه">موجه</option>
-          <option value="الموجهة">موجهة</option>
-          <option value="المرشد الطلابي">مرشد طلابي</option>
-          <option value="المرشدة الطلابية">مرشدة طلابية</option>
-          <option value="رائد النشاط">رائد نشاط</option>
-          <option value="رائدة النشاط">رائدة نشاط</option>
-          <option value="وكيل المدرسة">وكيل المدرسة</option>
-          <option value="وكيلة المدرسة">وكيلة المدرسة</option>
-          <option value="">— مخصص —</option>
         </select>
-        <input class="wc-inp" id="wc-teacher-name" placeholder="اسم المعلم / المنسوب (اختياري — يظهر يمين أسفل التقرير)">
+        <input class="wc-inp" id="wc-teacher-name" placeholder="✍️ اسم صاحب التقرير (الذي يحرر التقرير)">
+      </div>
+      <!-- اعتماد المدير (اختياري — للتقارير التي تحتاج مصادقة) -->
+      <div class="staff-row" style="display:grid;grid-template-columns:130px 1fr;gap:7px;margin-bottom:9px;align-items:center" id="director-row">
+        <label class="wc-lbl" style="padding:0 5px;font-size:12px;color:var(--dark);font-weight:700;background:#f0f4f8;border-radius:7px;text-align:center;line-height:38px">🏫 المعتمد</label>
+        <input class="wc-inp" id="wc-staff-name" placeholder="اسم مدير المدرسة المعتمد (اختياري)">
       </div>
       <div class="dir-row">
         <button class="go-btn" onclick="goEditor()" style="width:100%">انتقال للمحرر ←</button>
@@ -400,12 +404,29 @@ body{font-family:"Tajawal",sans-serif;background:#eef1f5;color:#1a2a35;min-heigh
       </div>
     </div>
     <div id="el-img-f" style="display:none">
-      <div class="up-area" onclick="document.getElementById('el-img-inp').click()">
-        <input type="file" id="el-img-inp" accept="image/*" onchange="previewElImg(this)">
-        <div style="font-size:26px;margin-bottom:4px">📷</div>
-        <div style="font-size:11px;color:#aaa">اضغط لاختيار صورة</div>
+      <div class="f-grp" style="margin-bottom:9px">
+        <label class="f-lbl">عنوان الشواهد (اختياري)</label>
+        <input class="f-inp" id="new-imgs-title" placeholder="مثال: شواهد الاصطفاف الصباحي" value="الشواهد المرئية">
       </div>
-      <div id="el-img-prev" style="margin-top:8px;display:none"><img id="el-img-prev-img" style="width:100%;border-radius:8px;max-height:130px;object-fit:cover"></div>
+      <div class="f-grp" style="margin-bottom:9px">
+        <label class="f-lbl">تخطيط الصور</label>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">
+          <button class="el-w-btn active" id="img-lay-2" onclick="selImgLay(2)" style="font-size:11px">2 جانبية</button>
+          <button class="el-w-btn" id="img-lay-3" onclick="selImgLay(3)" style="font-size:11px">3 صور</button>
+          <button class="el-w-btn" id="img-lay-4" onclick="selImgLay(4)" style="font-size:11px">4 شبكة</button>
+          <button class="el-w-btn" id="img-lay-1" onclick="selImgLay(1)" style="font-size:11px">صورة واحدة</button>
+        </div>
+      </div>
+      <div class="up-area" onclick="document.getElementById('el-img-inp').click()" style="border-style:dashed">
+        <input type="file" id="el-img-inp" accept="image/*" multiple onchange="previewElImgs(this)">
+        <div style="font-size:26px;margin-bottom:4px">📷</div>
+        <div style="font-size:11px;color:#aaa">اضغط لاختيار صورة أو أكثر (يمكنك اختيار عدة صور دفعة واحدة)</div>
+        <div style="font-size:10px;color:#0DA9A6;font-weight:700;margin-top:3px" id="imgs-count-info"></div>
+      </div>
+      <div id="el-imgs-prev" style="margin-top:8px;display:none">
+        <div id="el-imgs-prev-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:5px"></div>
+        <div style="font-size:10px;color:#aaa;text-align:center">⬆ يمكنك إضافة المزيد بالضغط على الإطار أعلاه</div>
+      </div>
     </div>
     <div class="modal-btns" style="margin-top:14px">
       <button class="mbtn mbtn-dark" onclick="confirmAddEl()">إضافة للتقرير</button>
@@ -503,7 +524,55 @@ var LC='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARgAAADWCAYAAAAKG538AAAKMW
 var LW='data:image/png;base64,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';
 
 /* ══ بيانات الواجهة ══ */
-var wcDept='',wcSchool='',wcDirector='',dateMode='h',wcReportTitle='قائمة مهام مدير المدرسة',wcStaffRole='المعلم',wcTeacherName='';
+var wcDept='',wcSchool='',wcDirector='',dateMode='h',wcReportTitle='قائمة مهام المعلم',wcStaffRole='المعلم',wcTeacherName='',tplMode='tc';
+
+/* ══ خريطة الأدوار الموحّدة (مرجع وحيد) ══
+   كل دور له: عنوان التقرير + قائمة المسميات (مذكر/مؤنث) + اللقب الافتراضي + مفتاح ROLE_TASKS
+   هذا يضمن عدم الخلط نهائياً بين دور وآخر */
+var ROLE_MAP={
+  mgr:{title:'قائمة مهام مدير المدرسة',roles:[['مدير المدرسة','مدير المدرسة'],['مديرة المدرسة','مديرة المدرسة']],default:'مدير المدرسة',taskKey:'مدير'},
+  vc :{title:'قائمة مهام وكيل المدرسة',roles:[['وكيل المدرسة','وكيل المدرسة'],['وكيلة المدرسة','وكيلة المدرسة']],default:'وكيل المدرسة',taskKey:'وكيل'},
+  cs :{title:'قائمة مهام الموجه الطلابي',roles:[['الموجه الطلابي','موجه طلابي'],['الموجهة الطلابية','موجهة طلابية']],default:'الموجه الطلابي',taskKey:'موجه'},
+  act:{title:'قائمة مهام رائد النشاط',roles:[['رائد النشاط','رائد نشاط'],['رائدة النشاط','رائدة نشاط']],default:'رائد النشاط',taskKey:'رائد'},
+  tc :{title:'قائمة مهام المعلم',roles:[['المعلم','معلم'],['المعلمة','معلمة']],default:'المعلم',taskKey:'معلم'},
+  admin:{title:'قائمة مهام الكادر الإداري',roles:[['المساعد الإداري','مساعد إداري'],['المساعدة الإدارية','مساعدة إدارية'],['السكرتير','سكرتير'],['السكرتيرة','سكرتيرة'],['مسجل المعلومات','مسجل معلومات'],['مسجلة المعلومات','مسجلة معلومات']],default:'المساعد الإداري',taskKey:'إداري'}
+};
+
+/* تبديل القالب — يُحدّث: القائمة + العنوان + المسمى الافتراضي بشكل مترابط (لا خلط) */
+function setTplMode(m){
+  if(!ROLE_MAP[m])return;
+  var prevMode = tplMode;
+  tplMode=m;
+  /* تفعيل الزر */
+  Object.keys(ROLE_MAP).forEach(function(k){
+    var b=document.getElementById('rt-'+k);
+    if(b)b.classList.toggle('active',m===k);
+  });
+  /* تحديث عنوان التقرير دائماً عند تغيير الدور — لمنع تقرير معلم باسم مدير */
+  var t=document.getElementById('wc-report-title');
+  if(t){t.value=ROLE_MAP[m].title;wcReportTitle=t.value;}
+  /* إعادة بناء قائمة المسميات الوظيفية — تظهر فقط مسميات الدور الحالي */
+  var sel=document.getElementById('wc-staff-role');
+  if(sel){
+    sel.innerHTML='';
+    ROLE_MAP[m].roles.forEach(function(r){
+      var opt=document.createElement('option');opt.value=r[0];opt.textContent=r[1];
+      sel.appendChild(opt);
+    });
+    /* الافتراضي = أول مسمى (مذكر) */
+    sel.value=ROLE_MAP[m].default;
+    wcStaffRole=sel.value;
+  }
+  /* إخفاء "المعتمد" عند اختيار دور المدير (لا يعتمد نفسه) */
+  var dirRow=document.getElementById('director-row');
+  if(dirRow){dirRow.style.display = (m==='mgr') ? 'none' : 'grid';}
+  /* تنبيه ذكي: إذا غيّر المستخدم الدور بعد كتابة اسم، نذكّره بمراجعة الاسم */
+  if(prevMode && prevMode !== m && wcTeacherName && typeof toast === 'function'){
+    toast('💡 تم تبديل الدور — تحقق من اسم صاحب التقرير');
+  }
+  /* تحديث المعاينة لو كنا في المحرر */
+  if(typeof renderPrev==='function' && document.getElementById('screen-editor').classList.contains('active'))lu();
+}
 
 /* ضبط شعارَي الترحيب وشريط الأداة من المتغير المضمّن */
 (function(){var w=document.getElementById('wc-logo-img');if(w)w.src=LC;var h=document.getElementById('hdr-logo-img');if(h)h.src=LW;})();
@@ -529,17 +598,124 @@ function setReportTitle(t){
   if(typeof renderPrev==='function' && document.getElementById('screen-editor').classList.contains('active'))lu();
 }
 
-/* مستمعات حية للحقول الجديدة (عنوان التقرير + المسمى الوظيفي + اسم المعلم) */
+/* مستمعات حية للحقول (متناسقة مع ROLE_MAP — لا خلط بين الأدوار) */
 (function(){
   var titleInp=document.getElementById('wc-report-title');
   if(titleInp){titleInp.addEventListener('input',function(){wcReportTitle=this.value.trim();var ed=document.getElementById('ed-name');if(ed)ed.textContent=wcReportTitle||'تقرير';if(typeof renderPrev==='function' && document.getElementById('screen-editor').classList.contains('active'))lu();});}
   var roleSel=document.getElementById('wc-staff-role');
-  if(roleSel){roleSel.addEventListener('change',function(){wcStaffRole=this.value.trim();if(typeof renderPrev==='function' && document.getElementById('screen-editor').classList.contains('active'))lu();});}
+  if(roleSel){roleSel.addEventListener('change',function(){
+    wcStaffRole=this.value.trim();
+    /* المسمى يغيّر فقط نص التوقيع — لا يغيّر المهام (المهام محكومة بـ tplMode فقط) */
+    if(typeof renderPrev==='function' && document.getElementById('screen-editor').classList.contains('active'))lu();
+  });}
   var nameInp=document.getElementById('wc-staff-name');
   if(nameInp){nameInp.addEventListener('input',function(){wcDirector=this.value.trim();if(typeof renderPrev==='function' && document.getElementById('screen-editor').classList.contains('active'))lu();});}
   var teacherInp=document.getElementById('wc-teacher-name');
   if(teacherInp){teacherInp.addEventListener('input',function(){wcTeacherName=this.value.trim();if(typeof renderPrev==='function' && document.getElementById('screen-editor').classList.contains('active'))lu();});}
+  /* تهيئة قائمة المسميات للدور الافتراضي عند التحميل */
+  setTplMode(tplMode);
 })();
+
+/* ══ قوالب المهام اليومية لكل دور (مرجع: الدليل التنظيمي 1446هـ) ══ */
+var ROLE_TASKS={
+  /* ─── المدير (ص 29-30) ─── */
+  'مدير':{
+    1:[
+      {id:2101,title:'حضور الاصطفاف الصباحي وتفعيل الإذاعة ونشيد العلم (بند 31)',content:'',cols:2,type:'text',isTask:true},
+      {id:2102,title:'اعتماد تقرير انضباط المعلمين اليومي — حضوري (بند 23)',content:'',cols:2,type:'text',isTask:true,taskType:'huduri',multiInputs:[{id:'att',lbl:'الحضور'},{id:'abs',lbl:'الغياب'}]},
+      {id:2103,title:'اعتماد تقرير انضباط الطلاب اليومي — نور (بند 25)',content:'',cols:2,type:'text',isTask:true,taskType:'noor',multiInputs:[{id:'att',lbl:'الحضور'},{id:'abs',lbl:'الغياب'}]},
+      {id:2104,title:'تنفيذ الزيارات الصفية ومتابعة استراتيجيات التدريس (بند 21، 32)',content:'',cols:2,type:'text',isTask:true,taskType:'visit'},
+      {id:2105,title:'متابعة إجراءات الموارد البشرية — فارس (بند 26)',content:'',cols:2,type:'text',isTask:true,taskType:'faris',inputLabel:'عدد الإجراءات'},
+      {id:2106,title:'مراجعة بلاغات الدعم الموحد ومتابعة التذاكر (بند 26)',content:'',cols:2,type:'text',isTask:true,taskType:'support',inputLabel:'عدد التذاكر'}
+    ],
+    2:[
+      {id:2107,title:'ترأس/متابعة اجتماعات اللجان المدرسية (بند 33)',content:'',cols:2,type:'text',isTask:true,taskType:'committees'},
+      {id:2108,title:'الإشراف على تهيئة وتجهيز مرافق المدرسة (بند 34)',content:'',cols:2,type:'text',isTask:true,taskType:'supervision'}
+    ]
+  },
+  /* ─── الوكيل (ص 31-34) ─── */
+  'وكيل':{
+    1:[
+      {id:2201,title:'تنظيم الطلاب في الاصطفاف الصباحي والإشراف على الانتظام',content:'',cols:2,type:'text',isTask:true},
+      {id:2202,title:'إثبات حضور المعلمين عبر حضوري وإغلاق سجل الدوام (بند 5)',content:'',cols:2,type:'text',isTask:true,taskType:'huduri',multiInputs:[{id:'att',lbl:'الحضور'},{id:'abs',lbl:'الغياب'}]},
+      {id:2203,title:'الإشراف على رصد غياب الطلاب في نور (بند 14)',content:'',cols:2,type:'text',isTask:true,taskType:'noor',multiInputs:[{id:'att',lbl:'الحضور'},{id:'abs',lbl:'الغياب'}]},
+      {id:2204,title:'توزيع حصص الاحتياط وسد العجز الطارئ (بند 21)',content:'',cols:2,type:'text',isTask:true,inputLabel:'عدد الحصص'},
+      {id:2205,title:'إعداد ومتابعة جدول الإشراف والمناوبة اليومية (بند 20)',content:'',cols:2,type:'text',isTask:true,taskType:'supervision'}
+    ],
+    2:[
+      {id:2206,title:'رفع الحالات الطارئة في الدعم الموحد (بند 15)',content:'',cols:2,type:'text',isTask:true,taskType:'support',inputLabel:'عدد البلاغات'},
+      {id:2207,title:'حضور الاصطفاف والإشراف اليومي على الإذاعة (بند 25)',content:'',cols:2,type:'text',isTask:true}
+    ]
+  },
+  /* ─── الموجه الطلابي (ص 47-48) ─── */
+  'موجه':{
+    1:[
+      {id:2301,title:'ملاحظة سلوك الطلاب أثناء الاصطفاف ورصد الحالات (بند 3)',content:'',cols:2,type:'text',isTask:true,inputLabel:'عدد الحالات'},
+      {id:2302,title:'تحليل تقرير غياب الطلاب من نور ومتابعة المتكررين (بند 4)',content:'',cols:2,type:'text',isTask:true,taskType:'noor',multiInputs:[{id:'abs',lbl:'الغياب'},{id:'lat',lbl:'التأخر'}]},
+      {id:2303,title:'جدولة لقاءات أولياء الأمور — مواعيد مدرستي (بند 16)',content:'',cols:2,type:'text',isTask:true,taskType:'mawaeed',inputLabel:'عدد الحجوزات'},
+      {id:2304,title:'المشاركة في لجنة التوجيه الطلابي وتفعيل قراراتها (بند 9)',content:'',cols:2,type:'text',isTask:true,taskType:'committees'}
+    ],
+    2:[
+      {id:2305,title:'عقد جلسات توجيه فردية وجمعية للحالات (بند 11، 25)',content:'',cols:2,type:'text',isTask:true,inputLabel:'عدد الجلسات'},
+      {id:2306,title:'تنفيذ المناوبة والإشراف اليومي على الطلاب (بند 20)',content:'',cols:2,type:'text',isTask:true,taskType:'supervision'}
+    ]
+  },
+  /* ─── رائد النشاط (ص 45-46) ─── */
+  'رائد':{
+    1:[
+      {id:2401,title:'تشغيل الإذاعة المدرسية في الاصطفاف وتفعيل النشيد (بند 20)',content:'',cols:2,type:'text',isTask:true},
+      {id:2402,title:'تفعيل برامج الشراكة مع الأسرة والمجتمع (بند 12، 22)',content:'',cols:2,type:'text',isTask:true,taskType:'mawaeed',inputLabel:'عدد المبادرات'},
+      {id:2403,title:'تصميم وتنفيذ مبادرات لجان المدرسة (بند 6، 16)',content:'',cols:2,type:'text',isTask:true,taskType:'committees'},
+      {id:2404,title:'الإشراف على تنفيذ حصص النشاط الصفية (بند 6)',content:'',cols:2,type:'text',isTask:true,inputLabel:'عدد الحصص'}
+    ],
+    2:[
+      {id:2405,title:'تنفيذ المناوبة وشغل حصص الانتظار (بند 20)',content:'',cols:2,type:'text',isTask:true,taskType:'supervision'},
+      {id:2406,title:'رصد الطلاب المتميزين ورفع أسمائهم للتكريم (بند 15)',content:'',cols:2,type:'text',isTask:true,inputLabel:'عدد المتميزين'}
+    ]
+  },
+  /* ─── المعلم (ص 35-36) ─── */
+  'معلم':{
+    1:[
+      {id:2501,title:'الوقوف مع التلاميذ في الاصطفاف وتحية العلم (بند 26)',content:'',cols:2,type:'text',isTask:true},
+      {id:2502,title:'إثبات الحضور في حضوري قبل الدوام بـ 15 دقيقة (بند 26)',content:'',cols:2,type:'text',isTask:true,taskType:'huduri'},
+      {id:2503,title:'تقديم الدروس وتطبيق استراتيجيات التعليم (بند 7، 9)',content:'',cols:2,type:'text',isTask:true,inputLabel:'عدد الحصص'},
+      {id:2504,title:'استقبال الزيارة الصفية والتعاون مع دعم التميز (بند 15)',content:'',cols:2,type:'text',isTask:true,taskType:'visit'}
+    ],
+    2:[
+      {id:2505,title:'تنفيذ المناوبة وشغل حصص الاحتياط (بند 26)',content:'',cols:2,type:'text',isTask:true,taskType:'supervision'},
+      {id:2506,title:'تقييم الطلاب وتقديم تغذية راجعة بناءة (بند 10، 13)',content:'',cols:2,type:'text',isTask:true},
+      {id:2507,title:'الحفاظ على النظام والانضباط بين الطلاب (بند 16)',content:'',cols:2,type:'text',isTask:true,taskType:'noor'}
+    ]
+  },
+  /* ─── الكادر الإداري (ص 53-54) ─── */
+  'إداري':{
+    1:[
+      {id:2601,title:'إدخال غياب الطلاب اليومي في نور (بند 5)',content:'',cols:2,type:'text',isTask:true,taskType:'noor',multiInputs:[{id:'att',lbl:'الحضور'},{id:'abs',lbl:'الغياب'}]},
+      {id:2602,title:'إدخال تأخر وغياب الموظفين في حضوري (بند 4)',content:'',cols:2,type:'text',isTask:true,taskType:'huduri',multiInputs:[{id:'att',lbl:'الحضور'},{id:'abs',lbl:'الغياب'}]},
+      {id:2603,title:'تنفيذ طلبات الموظفين عبر فارس (بند 5)',content:'',cols:2,type:'text',isTask:true,taskType:'faris',inputLabel:'عدد الطلبات'},
+      {id:2604,title:'رفع بلاغات الصيانة عبر الدعم الموحد (بند 11)',content:'',cols:2,type:'text',isTask:true,taskType:'support',inputLabel:'عدد البلاغات'}
+    ],
+    2:[
+      {id:2605,title:'تنظيم اجتماعات اللجان وكتابة المحاضر (بند 6)',content:'',cols:2,type:'text',isTask:true,taskType:'committees'},
+      {id:2606,title:'التواصل مع أولياء الأمور للغياب والتأخر (بند 14)',content:'',cols:2,type:'text',isTask:true,taskType:'mawaeed',inputLabel:'عدد المكالمات'},
+      {id:2607,title:'تنفيذ المناوبة والإشراف اليومي على الطلاب (بند 15)',content:'',cols:2,type:'text',isTask:true,taskType:'supervision'}
+    ]
+  }
+};
+
+/* مطابقة المسمى الوظيفي للقالب المناسب (يقبل صياغات متعددة) */
+function getRoleTasks(role){
+  if(!role)return null;
+  var r=role.toString();
+  /* الترتيب مهم: الأكثر تحديداً أولاً */
+  if(/وكيل/.test(r))return ROLE_TASKS['وكيل'];
+  if(/مدير/.test(r))return ROLE_TASKS['مدير'];
+  if(/مرشد|إرشاد|موجه/.test(r))return ROLE_TASKS['موجه'];
+  if(/رائد|نشاط/.test(r))return ROLE_TASKS['رائد'];
+  if(/إداري|سكرتير|مسجل|مساعد/.test(r))return ROLE_TASKS['إداري'];
+  if(/معلم/.test(r))return ROLE_TASKS['معلم'];
+  return null;
+}
 
 function goEditor(){
   wcDept=document.getElementById('wc-dept').value.trim()||'الإدارة العامة للتعليم';
@@ -547,28 +723,30 @@ function goEditor(){
   wcStaffRole=document.getElementById('wc-staff-role').value.trim();
   wcDirector=document.getElementById('wc-staff-name').value.trim();
   wcTeacherName=document.getElementById('wc-teacher-name').value.trim();
-  wcReportTitle=document.getElementById('wc-report-title').value.trim();
-  var dateVal=dateMode==='h'?getHijri():getMiladi();
-  /* تحديث شريط الأداة - نص "المدير" ثابت */
+  wcReportTitle=document.getElementById('wc-report-title').value.trim()||(ROLE_MAP[tplMode]?ROLE_MAP[tplMode].title:'تقرير');
+  /* تحديث شريط الأداة - النص يعكس الدور الحالي بدقة */
   document.getElementById('app-header').style.display='flex';
   document.getElementById('hdr-title').textContent=wcDept+(wcSchool?' — '+wcSchool:'');
-  document.getElementById('hdr-sub').textContent=wcDirector?'المدير: '+wcDirector:(wcReportTitle||'تقرير');
-  /* إعداد القالب الجاهز بالمهمتين */
+  document.getElementById('hdr-sub').textContent=wcReportTitle||'تقرير';
+  /* إعداد القالب — مصدر وحيد: tplMode (لا خلط مع wcStaffRole) */
   isFree=true;curReport=null;extraPages=1;moveMode=false;saveId=null;curGender='';
-  PB={1:[
-    {id:1001,title:'التفاعل في الاصطفاف الصباحي — الطلاب',content:'',cols:2,type:'text',isTask:true},
-    {id:1002,title:'التفاعل في الاصطفاف الصباحي — المعلمون',content:'',cols:2,type:'text',isTask:true},
-    {id:1003,title:'حصر حضور المعلمين (حضوري)',content:'',cols:2,type:'text',isTask:true,taskType:'huduri',multiInputs:[{id:'att',lbl:'الحضور'},{id:'abs',lbl:'الغياب'}]},
-    {id:1004,title:'حصر الانضباط اليومي للطلاب (نور)',content:'',cols:2,type:'text',isTask:true,taskType:'noor',multiInputs:[{id:'att',lbl:'الحضور'},{id:'abs',lbl:'الغياب'}]},
-    {id:1005,title:'التواصل مع الأسرة والمجتمع (مواعيد مدرستي)',content:'',cols:2,type:'text',isTask:true,taskType:'mawaeed',inputLabel:'عدد الحجوزات'},
-    {id:1006,title:'إجراءات الموارد البشرية (فارس)',content:'',cols:2,type:'text',isTask:true,taskType:'faris',inputLabel:'عدد الإجراءات'},
-    {id:1007,title:'الدعم الموحد',content:'',cols:2,type:'text',isTask:true,taskType:'support',inputLabel:'عدد التذاكر المرفوعة'}
-  ],
-  2:[
-    {id:1008,title:'الإشراف والمناوبة والاحتياط',content:'',cols:2,type:'text',isTask:true,taskType:'supervision'},
-    {id:1009,title:'عمليات التدريس والزيارات الصفية',content:'',cols:2,type:'text',isTask:true,taskType:'visit'},
-    {id:1010,title:'الاجتماع بلجان المدرسة',content:'',cols:2,type:'text',isTask:true,taskType:'committees'}
-  ]};
+  /* تنظيف الحالة السابقة لمنع تسرب taskState من تقرير قديم */
+  taskState={};undoStack=[];
+  var roleTpl=null;
+  if(ROLE_MAP[tplMode] && ROLE_TASKS[ROLE_MAP[tplMode].taskKey]){
+    roleTpl=ROLE_TASKS[ROLE_MAP[tplMode].taskKey];
+  }
+  if(roleTpl){
+    /* استنساخ عميق لتجنب تعديل القالب الأصلي */
+    PB=JSON.parse(JSON.stringify(roleTpl));
+  } else {
+    /* القالب العام (للحالات الاستثنائية) */
+    PB={1:[
+      {id:1001,title:'التفاعل في الاصطفاف الصباحي',content:'',cols:2,type:'text',isTask:true},
+      {id:1002,title:'متابعة الانضباط اليومي',content:'',cols:2,type:'text',isTask:true,taskType:'noor',multiInputs:[{id:'att',lbl:'الحضور'},{id:'abs',lbl:'الغياب'}]},
+      {id:1003,title:'التواصل مع الأسرة والمجتمع',content:'',cols:2,type:'text',isTask:true,taskType:'mawaeed',inputLabel:'عدد الحجوزات'}
+    ]};
+  }
   document.getElementById('ed-name').textContent=wcReportTitle||'تقرير';
   buildFreeSb();
   renderPrev();
@@ -607,9 +785,236 @@ var TASK_LEVELS={
   support:  [['ex','مُعالج'],['gd','قيد المعالجة'],['bl','متراكم']],
   huduri:   [['ex','ممتاز'],['gd','جيد جداً'],['bl','دون المأمول']],
   supervision:[['ex','تغطية كاملة'],['gd','تغطية جزئية'],['bl','قصور / عجز']],
-  visit:    [['ex','استطلاعية'],['gd','مخطط لها'],['bl','بدعوة من المعلم']],
-  committees:[['ex','مجدول'],['gd','متابعة تنفيذ'],['bl','طارئ']]
+  /* الزيارات الصفية واللجان: مستويات أداء حقيقية بدلاً من تصنيف */
+  visit:    [['ex','ممتاز / متميز'],['gd','جيد / مقبول'],['bl','يحتاج تطوير']],
+  committees:[['ex','منجز / فاعل'],['gd','جزئي / متابعة'],['bl','متعثر / لم يُنفذ']]
 };
+
+/* ══ إجراءات مخصصة لكل مهمة بمعرفها (id) - تطغى على TASK_ACTS ══ */
+/* المنطق: كل مهمة لها إجراءات متسقة مع مضمونها بالضبط */
+var TASK_SPECIFIC_ACTS={
+  /* ─────────── المدير ─────────── */
+  2101:{ /* حضور الاصطفاف وتفعيل الإذاعة */
+    ex:['إشادة برائد النشاط في الإذاعة','توثيق الاصطفاف المثالي','تكريم الفصول المنتظمة'],
+    gd:['توجيه رائد النشاط لتطوير الإذاعة','تنبيه لتحسين الانتظام'],
+    bl:['عقد اجتماع طارئ مع رائد النشاط','إعادة تنظيم آلية الاصطفاف','تكليف معلمين إضافيين للإشراف','رفع تقرير لإدارة التعليم']
+  },
+  2102:{ /* اعتماد تقرير المعلمين - حضوري */
+    ex:['اعتماد التقرير وإشادة بالانضباط','منح خطابات شكر للمنتظمين'],
+    gd:['اعتماد التقرير مع توجيه المتأخرين','تنبيه شفهي للحالات الفردية'],
+    bl:['عقد اجتماع مع المعلمين المتغيبين','إصدار خطاب رسمي للحالات المتكررة','الرفع للموارد البشرية','تكليف الوكيل بمتابعة دقيقة','إعداد خطة تصحيحية للانضباط']
+  },
+  2103:{ /* اعتماد تقرير الطلاب - نور */
+    ex:['اعتماد التقرير وتكريم الفصول المنضبطة','إشادة بالمرشد الطلابي'],
+    gd:['توجيه المرشد بمتابعة الفئة المتذبذبة','تكليف بحملة توعية'],
+    bl:['عقد اجتماع طارئ مع المرشد ووكيل الطلاب','استدعاء أولياء أمور المتغيبين','رفع تقرير لإدارة التعليم','إطلاق حملة انضباط مدرسية']
+  },
+  2104:{ /* الزيارات الصفية */
+    ex:['كتابة خطاب شكر للمعلم','توثيق الممارسة المتميزة في ملف المدرسة','ترشيح المعلم لجوائز التميز'],
+    gd:['تقديم تغذية راجعة بناءة','اقتراح برامج تطوير مهني'],
+    bl:['جدولة زيارة متابعة قريبة','تكليف معلم خبير بدعمه','إعداد خطة تطوير فردية','الرفع لقسم التطوير المهني']
+  },
+  2105:{ /* فارس - الموارد البشرية */
+    ex:['اعتماد الإجراءات','إشادة بسرعة الإنجاز'],
+    gd:['متابعة الإجراءات قيد التنفيذ مع الإداري'],
+    bl:['تصعيد الإجراءات المتأخرة لفارس','التواصل مع إدارة الموارد البشرية','تكليف الإداري بمتابعة دقيقة','رفع طلب دعم فني']
+  },
+  2106:{ /* الدعم الموحد */
+    ex:['اعتماد إغلاق التذاكر','توثيق سرعة المعالجة'],
+    gd:['متابعة التذاكر العالقة'],
+    bl:['تصعيد التذاكر المتأخرة','رفع تذاكر جديدة عاجلة','التواصل مع إدارة الصيانة','رفع تقرير للإدارة العامة']
+  },
+  2107:{ /* اللجان المدرسية */
+    ex:['اعتماد التوصيات وإصدار قرارات تنفيذ','توثيق محاضر متميزة'],
+    gd:['متابعة تنفيذ التوصيات','تذكير اللجان بالمهام'],
+    bl:['عقد اجتماع طارئ','إعادة تشكيل اللجان غير الفاعلة','رفع تقرير استثنائي للإدارة','تكليف لجان فرعية بمهام عاجلة']
+  },
+  2108:{ /* تهيئة المرافق */
+    ex:['إشادة بفريق الصيانة','توثيق جاهزية المرافق'],
+    gd:['توجيه لإكمال التجهيزات الناقصة','جدولة صيانة دورية'],
+    bl:['رفع بلاغات صيانة عاجلة','تصعيد للدعم الموحد','إيقاف المرافق غير الآمنة مؤقتاً','الرفع لإدارة المباني']
+  },
+
+  /* ─────────── الوكيل ─────────── */
+  2201:{ /* تنظيم الطلاب في الاصطفاف */
+    ex:['إشادة بالطلاب المنظمين في الإذاعة','تكريم الفصول المثالية'],
+    gd:['توجيه الفصول للالتزام بالصفوف','تذكير المعلمين بالإشراف'],
+    bl:['تكليف معلمين إضافيين للإشراف','عقد لقاء توعوي للطلاب','إخطار المرشد الطلابي','رفع للمدير لاتخاذ إجراء']
+  },
+  2202:{ /* إثبات حضور المعلمين عبر حضوري */
+    ex:['إغلاق سجل الدوام دون ملاحظات','إشادة بالمعلمين المنتظمين'],
+    gd:['تنبيه للمعلمين المتأخرين قليلاً','توجيه شفهي بسيط'],
+    bl:['تسجيل المخالفات في حضوري','إخطار المعلم المتغيب رسمياً','تجهيز بدلاء للحصص','الرفع للمدير لإصدار قرار','التواصل مع الموارد البشرية']
+  },
+  2203:{ /* رصد غياب الطلاب في نور */
+    ex:['اعتماد سجل الانضباط','تكريم الطلاب المنتظمين'],
+    gd:['متابعة الحالات الفردية مع المرشد','إرسال تذكيرات لأولياء الأمور'],
+    bl:['التواصل العاجل مع أولياء الأمور','إحالة المتكررين للمرشد','عقد اجتماع لمعالجة الظاهرة','رفع تقرير شامل للمدير']
+  },
+  2204:{ /* توزيع حصص الاحتياط */
+    ex:['اعتماد توزيع متوازن','إشادة بسرعة الاستجابة'],
+    gd:['تعديل التوزيع لسد ثغرات بسيطة'],
+    bl:['إعادة توزيع شاملة للحصص','استدعاء معلمين بدلاء','تكليف معلمين بدروس إضافية','تجميع الفصول مؤقتاً','الرفع للمدير']
+  },
+  2205:{ /* جدول الإشراف والمناوبة */
+    ex:['اعتماد الجدول دون تعديل','إشادة بالمناوبين الملتزمين'],
+    gd:['تعديل بسيط على نقاط الإشراف','تكثيف التواجد في النقاط الحرجة'],
+    bl:['إعادة بناء جدول المناوبة','استدعاء معلمين إضافيين','عقد اجتماع طارئ مع المناوبين','الرفع للمدير لإصدار قرار']
+  },
+  2206:{ /* بلاغات الدعم الموحد */
+    ex:['توثيق الإغلاق السريع للبلاغات'],
+    gd:['متابعة البلاغات قيد المعالجة'],
+    bl:['رفع بلاغات عاجلة جديدة','تصعيد البلاغات المتأخرة','التواصل المباشر مع فريق الصيانة','الرفع للمدير']
+  },
+  2207:{ /* الاصطفاف والإذاعة */
+    ex:['إشادة برائد النشاط','توثيق الإذاعة المتميزة'],
+    gd:['توجيه لتطوير برنامج الإذاعة'],
+    bl:['تكليف معلم بديل للإذاعة','تجهيز برنامج طارئ','إخطار رائد النشاط','الرفع للمدير']
+  },
+
+  /* ─────────── الموجه الطلابي ─────────── */
+  2301:{ /* ملاحظة سلوك الطلاب في الاصطفاف */
+    ex:['تعزيز إيجابي للطلاب القدوة','رصد القدوة الحسنة في السجل'],
+    gd:['متابعة الحالات السلوكية البسيطة','جلسة توجيه جماعية مختصرة'],
+    bl:['فتح ملفات دراسة حالة','جلسات إرشاد فردية','استدعاء أولياء الأمور','تطبيق فنيات تعديل السلوك','الرفع للجنة التوجيه','التنسيق مع الموجه الصحي']
+  },
+  2302:{ /* تحليل غياب الطلاب من نور */
+    ex:['تكريم الطلاب المنتظمين','إعداد قائمة شرف للانضباط'],
+    gd:['إرسال تنبيهات لأولياء أمور المتذبذبين','متابعة فردية أسبوعية'],
+    bl:['دراسة حالة متكرري الغياب','استدعاء ولي الأمر','جلسة إرشادية فردية','التواصل مع جهات الحماية عند الحاجة','رفع تقرير للجنة التوجيه','فتح ملف حالة في نور']
+  },
+  2303:{ /* جدولة لقاءات الأسرة - مواعيد مدرستي */
+    ex:['توثيق تعاون الأسرة','إشراك الأسرة في برامج الإرشاد'],
+    gd:['متابعة المواعيد وتذكير ولي الأمر','إعادة جدولة المواعيد المتعثرة'],
+    bl:['اتصال مباشر بولي الأمر','زيارة منزلية عند الحاجة','تحويل الحالة لمختص','إعداد خطة تواصل بديلة','الرفع لإدارة المدرسة']
+  },
+  2304:{ /* لجنة التوجيه الطلابي */
+    ex:['توثيق التوصيات','تنفيذ المخرجات فوراً'],
+    gd:['متابعة تنفيذ التوصيات أسبوعياً','تذكير الأعضاء بالمهام'],
+    bl:['عقد اجتماع طارئ للجنة','الرفع للمدير لتفعيل اللجنة','إعادة توزيع المهام','إصدار قرارات استثنائية']
+  },
+  2305:{ /* جلسات التوجيه الفردي والجمعي */
+    ex:['توثيق الجلسات الناجحة','نقل أثرها على الطالب لملف الإنجاز'],
+    gd:['جدولة جلسات متابعة','تكثيف اللقاءات الفردية'],
+    bl:['تحويل الحالات المعقدة لمختص نفسي','إشراك ولي الأمر في الجلسات','رفع تقرير للجنة التوجيه','التنسيق مع جهات الحماية']
+  },
+  2306:{ /* المناوبة والإشراف اليومي */
+    ex:['أداء مثالي للمناوبة','توثيق التميز'],
+    gd:['الالتزام بنقاط الإشراف','تكثيف التواجد'],
+    bl:['طلب دعم من الزملاء','الرفع للوكيل لإعادة التوزيع','تجهيز خطة بديلة']
+  },
+
+  /* ─────────── رائد النشاط ─────────── */
+  2401:{ /* الإذاعة المدرسية في الاصطفاف */
+    ex:['تكريم فريق الإذاعة','توثيق البرنامج المتميز','نشره في القنوات المدرسية'],
+    gd:['تطوير محتوى الإذاعة','إشراك طلاب جدد'],
+    bl:['إعادة بناء فريق الإذاعة','تجهيز برامج بديلة سريعة','الاستعانة بمعلمين','تكثيف التدريب']
+  },
+  2402:{ /* الشراكة مع الأسرة والمجتمع */
+    ex:['توثيق المبادرات الناجحة','إعداد عرض للجنة الإدارية','نشر التجربة'],
+    gd:['تطوير المبادرات وتوسيع الشراكات','متابعة الردود'],
+    bl:['إعادة تقييم خطة الشراكة','استشارة لجنة التميز','الاستعانة بشركاء جدد','الرفع للمدير']
+  },
+  2403:{ /* مبادرات لجان المدرسة */
+    ex:['توثيق نجاح المبادرة','نشرها كنموذج بين المدارس','تكريم المشاركين'],
+    gd:['تطوير المبادرة في الفصل القادم','إضافة شركاء جدد'],
+    bl:['إعادة تصميم المبادرة','استشارة لجنة التميز','تعديل الخطة الزمنية','الاستعانة بالشراكات المجتمعية']
+  },
+  2404:{ /* حصص النشاط الصفية */
+    ex:['توثيق تنفيذ الحصص بجودة عالية','إشادة بالمعلمين المنفذين'],
+    gd:['متابعة الحصص الناقصة','تذكير المعلمين بالخطة'],
+    bl:['إعادة جدولة الحصص الفائتة','الرفع لوكيل الشؤون التعليمية','تكثيف المتابعة الميدانية','تجهيز بدائل للحصص']
+  },
+  2405:{ /* المناوبة وحصص الانتظار */
+    ex:['أداء متميز للمناوبة','توثيق الالتزام'],
+    gd:['تكثيف التواجد في النقاط الحرجة'],
+    bl:['طلب دعم من الزملاء','الرفع للوكيل','تجهيز خطة بديلة عاجلة']
+  },
+  2406:{ /* رصد المتميزين في الأنشطة */
+    ex:['رفع أسماء للمدير للتكريم الرسمي','إعداد شهادات تقدير','نشر الإنجازات في الإذاعة'],
+    gd:['متابعة المتميزين في الأنشطة القادمة','تكثيف التحفيز'],
+    bl:['إعداد برامج تحفيزية لاكتشاف مواهب جديدة','الاستعانة بأنشطة جذابة','إشراك المرشد الطلابي']
+  },
+
+  /* ─────────── المعلم ─────────── */
+  2501:{ /* الوقوف مع التلاميذ في الاصطفاف */
+    ex:['تسجيل الانضباط في ملف الفصل','تكريم الطلاب المنظمين','اختيار قدوة الأسبوع'],
+    gd:['توجيه الطلاب لتحسين الصفوف','تذكير قبل الاصطفاف'],
+    bl:['تكثيف الإشراف','عقد جلسة توعية للفصل','إخطار المرشد الطلابي للمتكررين','التواصل مع ولي الأمر']
+  },
+  2502:{ /* إثبات الحضور في حضوري */
+    ex:['الالتزام بالحضور المبكر','تسجيل الانضباط في ملف الأداء'],
+    gd:['الاستمرار على الانتظام','مراجعة سجل الحضور الشخصي'],
+    bl:['تسجيل العذر في حضوري','إخطار الوكيل بالظرف الطارئ','تجهيز خطة بديلة للحصص','التواصل مع زميل لتغطية الحصة']
+  },
+  2503:{ /* تقديم الدروس وتطبيق الاستراتيجيات */
+    ex:['توثيق الدرس النموذجي','مشاركته مع الزملاء','رفعه لمنصة المعلم'],
+    gd:['تطوير الاستراتيجيات','حضور دورات في طرائق التدريس','تجريب أنشطة جديدة'],
+    bl:['إعادة بناء الدرس','الاستعانة بمعلم خبير','حضور تدريب عاجل','تطبيق خطة تحسين فردية']
+  },
+  2504:{ /* استقبال الزيارة الصفية */
+    ex:['الاستفادة من ملاحظات الزائر','توثيق الممارسة المتميزة','نقل الخبرة للزملاء'],
+    gd:['تطبيق التوصيات في الحصص القادمة','مناقشة نقاط التحسين'],
+    bl:['تطبيق خطة التحسين فوراً','حضور دورات تدريبية','الاستعانة بمعلم خبير','إعداد درس تجريبي مطور','رفع تقرير ذاتي للوكيل']
+  },
+  2505:{ /* المناوبة وحصص الاحتياط */
+    ex:['الالتزام الكامل بنقاط المناوبة','توثيق التواجد المثالي','تقديم نموذج للزملاء'],
+    gd:['تكثيف التواجد في الأماكن الحساسة','تنظيم تنقلات الطلاب'],
+    bl:['طلب دعم من زميل','إخطار الوكيل بالعجز','تجهيز خطة طوارئ','الرفع لإعادة توزيع نقاط المناوبة']
+  },
+  2506:{ /* تقييم الطلاب وتغذية راجعة */
+    ex:['توثيق التميز في ملف الطالب','تكريم في الفصل','إشراك في برامج إثرائية'],
+    gd:['تقديم خطط دعم فردية','متابعة التحسن أسبوعياً'],
+    bl:['إعداد خطة علاجية مكثفة','إخطار المرشد الطلابي','استدعاء ولي الأمر','حصص علاجية إضافية','الرفع لوكيل الشؤون التعليمية']
+  },
+  2507:{ /* النظام والانضباط بين الطلاب */
+    ex:['تسجيل الانضباط المثالي','تكريم الفصل بأكمله','اختيار قدوة الأسبوع'],
+    gd:['توجيه شفهي للحالات الفردية','تطبيق نظام النقاط'],
+    bl:['تطبيق لائحة السلوك','إخطار المرشد الطلابي','استدعاء ولي الأمر','جلسة توجيه فردية','الرفع لوكيل شؤون الطلاب']
+  },
+
+  /* ─────────── الكادر الإداري ─────────── */
+  2601:{ /* إدخال غياب الطلاب في نور */
+    ex:['إغلاق التقرير اليومي بدقة','توثيق الانضباط في السجل'],
+    gd:['مراجعة الإدخالات والتأكد من اكتمالها','تذكير المعلمين بالحصة الأولى'],
+    bl:['إكمال الإدخالات المتأخرة فوراً','التواصل مع المعلمين لتدقيق البيانات','الرفع لوكيل الشؤون المدرسية','إخطار المرشد بالحالات']
+  },
+  2602:{ /* إدخال غياب الموظفين في حضوري */
+    ex:['إغلاق سجل الدوام دون ملاحظات','توثيق الانضباط الكامل'],
+    gd:['تذكير المعلمين بتسجيل العذر','مراجعة سجل البصمة'],
+    bl:['تسجيل المخالفات في حضوري','إخطار الوكيل بالحالات المتكررة','تجهيز تقرير للموارد البشرية','رفع طلب دعم فني عند خلل النظام']
+  },
+  2603:{ /* طلبات الموظفين عبر فارس */
+    ex:['توثيق إنجاز الطلبات في وقتها','إشادة في تقرير الأداء'],
+    gd:['متابعة الطلبات قيد التنفيذ','تذكير الموارد البشرية'],
+    bl:['تصعيد الطلبات المتأخرة في فارس','التواصل المباشر مع الموارد البشرية','رفع طلب دعم فني','الرفع للوكيل المختص','تسجيل الملاحظة في السجل']
+  },
+  2604:{ /* بلاغات الصيانة عبر الدعم الموحد */
+    ex:['توثيق إغلاق البلاغات بسرعة','إشادة بفريق الصيانة'],
+    gd:['متابعة البلاغات قيد المعالجة','تذكير الفريق الفني'],
+    bl:['رفع بلاغات عاجلة جديدة','تصعيد البلاغات المتأخرة','التواصل المباشر مع إدارة الصيانة','الرفع لوكيل الشؤون المدرسية']
+  },
+  2605:{ /* محاضر اللجان */
+    ex:['توثيق المحاضر بدقة','أرشفة منظمة','تعميم القرارات فوراً'],
+    gd:['متابعة تنفيذ التوصيات','تذكير الأعضاء بالاجتماعات القادمة'],
+    bl:['إعادة جدولة الاجتماعات الفائتة','الرفع لرئيس اللجنة','تجهيز ملخص للمدير','إخطار الأعضاء بالعاجل']
+  },
+  2606:{ /* التواصل مع أولياء الأمور */
+    ex:['توثيق نجاح التواصل','تسجيل الردود الإيجابية','رفع تقرير للمرشد'],
+    gd:['إعادة المحاولة في أوقات مختلفة','تجريب وسائل تواصل بديلة'],
+    bl:['زيارة منزلية مع المرشد الطلابي','الرفع للمرشد لاتخاذ إجراء','تحويل الحالة للوكيل','تجهيز خطاب رسمي']
+  },
+  2607:{ /* المناوبة والإشراف اليومي */
+    ex:['أداء متميز للمناوبة','توثيق الالتزام في تقرير الأداء'],
+    gd:['تكثيف التواجد في نقاط الإشراف','مراجعة جدول المناوبة'],
+    bl:['طلب دعم من زميل','الرفع للوكيل لإعادة التوزيع','تجهيز خطة بديلة عاجلة']
+  }
+};
+
+function getSpecificActs(bid){
+  if(!bid)return null;
+  return TASK_SPECIFIC_ACTS[bid]||TASK_SPECIFIC_ACTS[String(bid)]||null;
+}
 
 var TASK_ACTS={
   default:{
@@ -780,7 +1185,7 @@ function openActionsModal(bid){
   var list=document.getElementById('am-act-list');list.innerHTML='';
   
   var lvl = taskState[bid].level || 'bl'; 
-  var actsObj = TASK_ACTS[tt] || TASK_ACTS.default;
+  var actsObj = getSpecificActs(bid) || TASK_ACTS[tt] || TASK_ACTS.default;
   var acts = actsObj[lvl] || actsObj.bl || TASK_ACTS.default.bl; 
 
   acts.forEach(function(a){
@@ -835,6 +1240,17 @@ function confirmActions(){
   closeModal('modal-actions');
 }
 
+/* دالة حماية من XSS — تُستخدم قبل إدراج أي مدخل مستخدم في innerHTML */
+function escapeHtml(s){
+  if(s==null) return '';
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
 function confirmVisitForm(){
   var t=document.getElementById('v-teacher').value.trim()||'معلم';
   var s=document.getElementById('v-spec').value.trim();
@@ -846,51 +1262,60 @@ function confirmVisitForm(){
 
   pushUndo();
   
-  var targetPage = 1 + extraPages;
-  var visitsCount = 0;
+  /* الإستراتيجية الجديدة: إنشاء صفحة جديدة مخصصة للزيارة الصفية مباشرة بعد آخر صفحة محتوى
+     مع بطاقة احترافية موحدة تحوي: العنوان + جدول البيانات + التغذية الراجعة في كتلة واحدة */
   
-  if (targetPage > 2 && PB[targetPage]) {
-      for(var i=0; i<PB[targetPage].length; i++){
-          if(PB[targetPage][i].title && PB[targetPage][i].title.indexOf('بيانات الزيارة الصفية') !== -1){
-              visitsCount++;
-          }
+  /* تحديد آخر صفحة فيها زيارات (لتجميع الزيارات في نفس الصفحة بدل التشتيت) */
+  var visitPageNum = null;
+  var visitsInTargetPage = 0;
+  
+  /* البحث عن صفحة موجودة بها زيارات وما زال فيها مساحة (أقل من 2 زيارة) */
+  for(var pn = 1+extraPages; pn >= 1; pn--){
+    if(PB[pn]){
+      var visitsHere = 0;
+      PB[pn].forEach(function(b){
+        if(b.title && b.title.indexOf('بيانات الزيارة الصفية') !== -1) visitsHere++;
+      });
+      if(visitsHere > 0 && visitsHere < 2){
+        visitPageNum = pn;
+        visitsInTargetPage = visitsHere;
+        break;
       }
+    }
   }
   
-  if (targetPage === 2 || visitsCount >= 3) {
-      extraPages++;
-      targetPage = 1 + extraPages;
-      if(!PB[targetPage]) PB[targetPage] = [];
+  /* إذا لم نجد صفحة مناسبة، ننشئ صفحة جديدة */
+  if(visitPageNum === null){
+    extraPages++;
+    visitPageNum = 1 + extraPages;
+    PB[visitPageNum] = [];
   }
   
-  var contentHtml = '';
-  if(s) contentHtml += '<strong>التخصص:</strong> '+s+' &nbsp;&nbsp;&nbsp; ';
-  if(c) contentHtml += '<strong>الصف:</strong> '+c+'<br>';
-  if(p) contentHtml += '<strong>الحصة:</strong> '+p+' &nbsp;&nbsp;&nbsp; ';
-  if(top) contentHtml += '<strong>موضوع الدرس:</strong> '+top+'<br>';
-  if(purp) contentHtml += '<strong>غرض الزيارة:</strong> '+purp+'<br>';
+  /* بناء بطاقة الزيارة الصفية الاحترافية */
+  var visitId = Date.now() + Math.floor(Math.random()*1000);
+  var visitContent = '<div style="border:2px solid #0DA9A6;border-radius:8px;padding:14px;background:#f7fdfd;margin-bottom:8px;">' +
+    '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px 14px;margin-bottom:10px;font-size:12px;line-height:1.8;">';
+  if(s) visitContent += '<div><strong>التخصص:</strong> '+escapeHtml(s)+'</div>';
+  if(c) visitContent += '<div><strong>الصف:</strong> '+escapeHtml(c)+'</div>';
+  if(p) visitContent += '<div><strong>الحصة:</strong> '+escapeHtml(p)+'</div>';
+  if(top) visitContent += '<div><strong>موضوع الدرس:</strong> '+escapeHtml(top)+'</div>';
+  visitContent += '</div>';
+  if(purp) visitContent += '<div style="padding:8px 12px;background:#e8f9f9;border-right:3px solid #0DA9A6;border-radius:4px;font-size:12px;line-height:1.7;margin-bottom:'+(fb?'10px':'0')+'"><strong>غرض الزيارة:</strong> '+escapeHtml(purp)+'</div>';
+  if(fb) visitContent += '<div style="padding:8px 12px;background:#fffaee;border-right:3px solid #C1B48A;border-radius:4px;font-size:12px;line-height:1.7;"><strong>التغذية الراجعة:</strong><br>'+escapeHtml(fb).replace(/\n/g,'<br>')+'</div>';
+  visitContent += '</div>';
 
-  PB[targetPage].push({
-    id:Date.now(),
-    title:'بيانات الزيارة الصفية — '+t,
-    content:contentHtml,
-    cols:1,
-    type:'text'
+  PB[visitPageNum].push({
+    id: visitId,
+    title: 'بيانات الزيارة الصفية — '+escapeHtml(t),
+    content: visitContent,
+    cols: 2,  /* عرض كامل لاستيعاب البيانات الكثيرة */
+    type: 'text'
   });
-
-  if(fb){
-    PB[targetPage].push({
-      id:Date.now()+1,
-      title:'التغذية الراجعة والتوجيهات',
-      content:fb.replace(/\n/g,'<br>'),
-      cols:1,
-      type:'text'
-    });
-  }
   
   closeModal('modal-visit-form');
-  toast('تم إدراج بيانات الزيارة بنجاح');
-  lu();
+  toast('✅ تم إدراج الزيارة في صفحة '+visitPageNum);
+  /* عرض فوري لا انتظار */
+  renderPrev();
 }
 
 function addFeedbackText(txt){
@@ -913,10 +1338,21 @@ var curJob=null,curGender='',curReport=null,isFree=false,extraPages=0,saveId=nul
 var rStyle='grad',rFont='Tajawal',rHdrSz='lg',rFontSz='md';
 var PB={1:[]};
 var s1Data=null,s2Data=null;
-var elType='text',elWidth='half',elImgSrc=null;
+var elType='text',elWidth='half',elImgSrc=null,elImgsArr=[],elImgLay=2;
 
 function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});var el=document.getElementById('screen-'+id);if(el)el.classList.add('active');var hdr=document.getElementById('app-header');if(hdr)hdr.style.display=(id==='editor')?'flex':'none';}
-function goHome(){showScreen('welcome');}
+function goHome(){
+  /* إعادة ضبط الحالة عند العودة لمنع تسرب بيانات تقرير سابق إلى تقرير جديد */
+  PB={1:[]};
+  taskState={};
+  extraPages=0;
+  saveId=null;
+  undoStack=[];
+  s1Data=null;
+  s2Data=null;
+  showScreen('welcome');
+  loadSaved();
+}
 
 function loadSaved(){
   var list=document.getElementById('saved-list'),cnt=document.getElementById('saved-count');
@@ -945,9 +1381,14 @@ function openSaved(id){
   wcDept=d.wcDept||'الإدارة العامة للتعليم';
   wcSchool=d.wcSchool||'اسم المدرسة';
   wcDirector=d.wcDirector||'';
-  wcReportTitle=d.wcReportTitle!==undefined?d.wcReportTitle:'قائمة مهام مدير المدرسة';
+  wcReportTitle=d.wcReportTitle||'قائمة مهام المعلم';
   wcStaffRole=d.wcStaffRole||'المعلم';
   wcTeacherName=d.wcTeacherName||'';
+  tplMode=d.tplMode||'tc';
+  /* التحقق من صحة tplMode المحفوظ */
+  if(!ROLE_MAP[tplMode]) tplMode='tc';
+  /* setTplMode يعيد بناء قائمة المسميات للدور المحفوظ */
+  setTplMode(tplMode);
   dateMode=d.dateMode||'h';
   s1Data=d.s1Data||null;
   s2Data=d.s2Data||null;
@@ -958,14 +1399,16 @@ function openSaved(id){
   var staffNameEl=document.getElementById('wc-staff-name');if(staffNameEl)staffNameEl.value=wcDirector;
   var teacherEl=document.getElementById('wc-teacher-name');if(teacherEl)teacherEl.value=wcTeacherName;
   var titleEl=document.getElementById('wc-report-title');if(titleEl)titleEl.value=wcReportTitle;
+  /* استعادة المسمى الوظيفي المحفوظ — بعد setTplMode الذي بنى القائمة */
   var roleSel=document.getElementById('wc-staff-role');
   if(roleSel){
     var found=false;
     for(var i=0;i<roleSel.options.length;i++){if(roleSel.options[i].value===wcStaffRole){roleSel.selectedIndex=i;found=true;break;}}
+    /* إذا لم يُوجد المسمى في قائمة الدور، نضيفه (حماية من بيانات قديمة) */
     if(!found && wcStaffRole){var opt=document.createElement('option');opt.value=wcStaffRole;opt.textContent=wcStaffRole;opt.selected=true;roleSel.appendChild(opt);}
   }
   document.getElementById('hdr-title').textContent=wcDept+(wcSchool?' — '+wcSchool:'');
-  document.getElementById('hdr-sub').textContent=wcDirector?'المدير: '+wcDirector:(wcReportTitle||'تقرير');
+  document.getElementById('hdr-sub').textContent=wcReportTitle||'تقرير';
   
   document.getElementById('ed-name').textContent=d.edName||'التقرير';
   buildFreeSb();
@@ -1002,14 +1445,24 @@ function doSave(){
     }
   });
   
-  var data={curJob:curJob,curGender:curGender,curReport:curReport,isFree:isFree,PB:PB,taskState:taskState,extraPages:extraPages,rStyle:rStyle,rFont:rFont,rHdrSz:rHdrSz,rFontSz:rFontSz,edName:document.getElementById('ed-name').textContent,flds:flds,wcDept:wcDept,wcSchool:wcSchool,wcDirector:wcDirector,dateMode:dateMode,s1Data:s1Data,s2Data:s2Data,wcReportTitle:wcReportTitle,wcStaffRole:wcStaffRole,wcTeacherName:wcTeacherName};
+  var data={curJob:curJob,curGender:curGender,curReport:curReport,isFree:isFree,PB:PB,taskState:taskState,extraPages:extraPages,rStyle:rStyle,rFont:rFont,rHdrSz:rHdrSz,rFontSz:rFontSz,edName:document.getElementById('ed-name').textContent,flds:flds,wcDept:wcDept,wcSchool:wcSchool,wcDirector:wcDirector,dateMode:dateMode,s1Data:s1Data,s2Data:s2Data,wcReportTitle:wcReportTitle,wcStaffRole:wcStaffRole,wcTeacherName:wcTeacherName,tplMode:tplMode};
   var saved=[];try{saved=JSON.parse(localStorage.getItem('moe_rpts')||'[]');}catch(e){}
   var id=saveId||('r'+Date.now());saveId=id;
   var idx=saved.findIndex(function(s){return s.id===id;});
   var entry={id:id,name:name,date:new Date().toLocaleDateString('ar-SA'),data:data};
   if(idx>=0)saved[idx]=entry;else saved.unshift(entry);
-  localStorage.setItem('moe_rpts',JSON.stringify(saved));
-  toast('✅ تم حفظ التقرير');
+  /* حماية من امتلاء التخزين */
+  try {
+    localStorage.setItem('moe_rpts',JSON.stringify(saved));
+    toast('✅ تم حفظ التقرير');
+    loadSaved();
+  } catch(err) {
+    if(err.name === 'QuotaExceededError' || err.code === 22 || err.code === 1014){
+      toast('⚠️ المساحة ممتلئة — احذف تقارير قديمة أولاً');
+    } else {
+      toast('❌ تعذّر الحفظ: ' + (err.message||'خطأ غير معروف'));
+    }
+  }
 }
 
 function sec(t,inner){return '<div class="f-sec"><div class="f-sec-title">'+t+'</div>'+inner+'</div>';}
@@ -1030,12 +1483,21 @@ function fontSec(){
 }
 
 function sigSec(){
-  return sec('التوقيع','<div class="f-grp"><label class="f-lbl">التوقيع</label><div class="ig-row"><button class="ig-btn active" onclick="igC(this,\'f_sig2\',\'مدير المدرسة\')">مدير المدرسة</button><button class="ig-btn" onclick="igC(this,\'f_sig2\',\'مديرة المدرسة\')">مديرة المدرسة</button></div><div class="sig-canvas-wrap"><canvas id="sc2" width="280" height="60"></canvas><button class="sig-clear-btn" onclick="clrSig(2)">مسح</button></div></div>');
+  /* عنوان التوقيع يتغير حسب الدور: للمدير هو "توقيعه"، للآخرين "توقيع المعتمد" */
+  var sigTitle = (tplMode==='mgr') ? 'توقيعك (مدير المدرسة)' : 'توقيع المعتمد (مدير المدرسة)';
+  return sec('التوقيع','<div class="f-grp"><label class="f-lbl">'+sigTitle+'</label><div class="sig-canvas-wrap"><canvas id="sc2" width="280" height="60"></canvas><button class="sig-clear-btn" onclick="clrSig(2)">مسح</button></div></div>');
 }
 
 function buildFreeSb(){
   var sb=document.getElementById('sb-fields');
-  var h=hdrSec();h+=fontSec();h+=sigSec();
+  /* بانر يعرض الدور الحالي بوضوح — لمنع الخلط ولتذكير المستخدم بأن المهام لهذا الدور فقط */
+  var roleInfo = ROLE_MAP[tplMode] || ROLE_MAP.tc;
+  var roleBanner = '<div style="background:linear-gradient(135deg,#15445A,#0DA9A6);color:white;padding:10px 12px;border-radius:9px;margin-bottom:11px;text-align:center;">'+
+    '<div style="font-size:11px;opacity:.85;margin-bottom:2px">📋 التقرير الحالي</div>'+
+    '<div style="font-size:13px;font-weight:800">'+(wcStaffRole||roleInfo.default)+'</div>'+
+    (wcTeacherName?'<div style="font-size:11px;opacity:.9;margin-top:3px">'+wcTeacherName+'</div>':'')+
+  '</div>';
+  var h=roleBanner+hdrSec();h+=fontSec();h+=sigSec();
   sb.innerHTML=h;initSig();
 }
 
@@ -1062,23 +1524,131 @@ function initSig(){
 function clrSig(n){var c=document.getElementById('sc'+n);if(c)c.getContext('2d').clearRect(0,0,c.width,c.height);if(n===1)s1Data=null;else s2Data=null;}
 
 function openAddEl(){
-  elType='text';elWidth='half';elImgSrc=null;
+  elType='text';elWidth='half';elImgSrc=null;elImgsArr=[];elImgLay=2;
   document.getElementById('new-el-title').value='';document.getElementById('new-el-content').value='';
-  document.getElementById('el-img-prev').style.display='none';
+  var titleImg=document.getElementById('new-imgs-title');if(titleImg)titleImg.value='الشواهد المرئية';
+  var prev=document.getElementById('el-imgs-prev');if(prev)prev.style.display='none';
+  var grid=document.getElementById('el-imgs-prev-grid');if(grid)grid.innerHTML='';
+  var cnt=document.getElementById('imgs-count-info');if(cnt)cnt.textContent='';
   document.getElementById('el-text-f').style.display='block';document.getElementById('el-img-f').style.display='none';
   document.getElementById('el-t-text').classList.add('active');document.getElementById('el-t-img').classList.remove('active');
   document.getElementById('elw-half').classList.add('active');document.getElementById('elw-full').classList.remove('active');
+  /* إعادة ضبط أزرار التخطيط */
+  ['1','2','3','4'].forEach(function(n){
+    var b=document.getElementById('img-lay-'+n);
+    if(b)b.classList.toggle('active', n==='2');
+  });
   openModal('modal-add-el');
+}
+
+function selImgLay(n){
+  elImgLay=n;
+  ['1','2','3','4'].forEach(function(k){
+    var b=document.getElementById('img-lay-'+k);
+    if(b)b.classList.toggle('active', String(k)===String(n));
+  });
 }
 function selElType(t){elType=t;document.getElementById('el-t-text').classList.toggle('active',t==='text');document.getElementById('el-t-img').classList.toggle('active',t==='img');document.getElementById('el-text-f').style.display=t==='text'?'block':'none';document.getElementById('el-img-f').style.display=t==='img'?'block':'none';}
 function selElW(w){elWidth=w;document.getElementById('elw-half').classList.toggle('active',w==='half');document.getElementById('elw-full').classList.toggle('active',w==='full');}
-function previewElImg(inp){if(!inp.files[0])return;var r=new FileReader();r.onload=function(e){elImgSrc=e.target.result;document.getElementById('el-img-prev-img').src=elImgSrc;document.getElementById('el-img-prev').style.display='block';};r.readAsDataURL(inp.files[0]);}
+function previewElImgs(inp){
+  if(!inp.files || inp.files.length===0) return;
+  var files = Array.from(inp.files);
+  var grid = document.getElementById('el-imgs-prev-grid');
+  var prev = document.getElementById('el-imgs-prev');
+  var cntInfo = document.getElementById('imgs-count-info');
+  var loaded = 0;
+  files.forEach(function(file, idx){
+    /* ضغط الصورة عبر canvas لتقليل الحجم */
+    compressImage(file, 1200, 0.82).then(function(dataUrl){
+      elImgsArr.push(dataUrl);
+      var thumbWrap = document.createElement('div');
+      thumbWrap.style.cssText='position:relative;border:1.5px solid #0DA9A6;border-radius:6px;overflow:hidden;aspect-ratio:1/1';
+      var thumb = document.createElement('img');
+      thumb.src = dataUrl;
+      thumb.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
+      var rmBtn = document.createElement('button');
+      rmBtn.textContent='×';
+      rmBtn.style.cssText='position:absolute;top:2px;left:2px;background:rgba(200,40,40,.85);color:white;border:none;border-radius:4px;width:20px;height:20px;cursor:pointer;font-size:14px;font-weight:900;line-height:1';
+      var thisIdx = elImgsArr.length-1;
+      rmBtn.onclick = function(e){
+        e.stopPropagation();
+        var i = Array.from(grid.children).indexOf(thumbWrap);
+        if(i>-1){elImgsArr.splice(i,1);thumbWrap.remove();updateImgsCount();}
+      };
+      thumbWrap.appendChild(thumb);
+      thumbWrap.appendChild(rmBtn);
+      grid.appendChild(thumbWrap);
+      loaded++;
+      if(loaded === files.length){
+        prev.style.display='block';
+        updateImgsCount();
+      }
+    }).catch(function(err){
+      console.error('فشل تحميل الصورة:', err);
+      loaded++;
+    });
+  });
+  /* مسح قيمة input ليسمح بإعادة اختيار نفس الملف */
+  inp.value = '';
+}
+
+function updateImgsCount(){
+  var cnt = document.getElementById('imgs-count-info');
+  if(cnt) cnt.textContent = '✓ تم اختيار '+elImgsArr.length+' صورة';
+}
+
+/* ضغط الصورة عبر canvas — يقلل حجم base64 بنسبة 60-80% */
+function compressImage(file, maxWidth, quality){
+  return new Promise(function(resolve, reject){
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var img = new Image();
+      img.onload = function(){
+        var w = img.width, h = img.height;
+        if(w > maxWidth){ h = Math.round(h * maxWidth / w); w = maxWidth; }
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        try {
+          resolve(canvas.toDataURL('image/jpeg', quality||0.82));
+        } catch(err) { reject(err); }
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function previewElImg(inp){ /* للتوافق مع الإصدار القديم */ previewElImgs(inp); }
 function confirmAddEl(){
   if(!PB[1])PB[1]=[];
   pushUndo();
-  if(elType==='text'){PB[1].push({id:Date.now(),title:document.getElementById('new-el-title').value.trim()||'قسم جديد',content:document.getElementById('new-el-content').value,cols:elWidth==='full'?2:1,type:'text'});}
-  else if(elType==='img'&&elImgSrc){PB[1].push({id:Date.now(),title:'صورة',content:'',cols:1,type:'img',imgSrc:elImgSrc});}
-  closeModal('modal-add-el');lu();
+  if(elType==='text'){
+    PB[1].push({id:Date.now(),title:document.getElementById('new-el-title').value.trim()||'قسم جديد',content:document.getElementById('new-el-content').value,cols:elWidth==='full'?2:1,type:'text'});
+  }
+  else if(elType==='img' && elImgsArr.length>0){
+    /* كتلة شواهد موحّدة: عنوان + شبكة صور بإطار احترافي */
+    var imgsTitle = (document.getElementById('new-imgs-title')||{}).value || 'الشواهد المرئية';
+    PB[1].push({
+      id: Date.now(),
+      title: imgsTitle.trim() || 'الشواهد المرئية',
+      content: '',
+      cols: 2,  /* عرض كامل دائماً للشواهد */
+      type: 'imgs',
+      imgs: elImgsArr.slice(),
+      layout: elImgLay
+    });
+    toast('✅ تمت إضافة '+elImgsArr.length+' صورة');
+  }
+  else if(elType==='img' && elImgsArr.length===0){
+    toast('⚠️ يجب اختيار صورة واحدة على الأقل');
+    return;
+  }
+  closeModal('modal-add-el');
+  lu();
 }
 
 var undoStack=[];
@@ -1104,9 +1674,18 @@ function buildPage(num){
   var admin=wcDept||fv('f_admin')||'الإدارة العامة للتعليم',region=fv('f_region')||'',school=wcSchool||fv('f_school')||'مدرسة';
   var year=dateMode==='h'?getHijri():getMiladi(),sem='';
   var title=wcReportTitle;
-  /* توقيع المدير ثابت في وسط/يسار الفوتر — اللقب لا يتغير */
-  var s2l='مدير المدرسة';
-  var sig2=wcDirector?'/ '+wcDirector:'';
+  /* تذييل ذكي: يعكس الدور الفعلي بدقة (لا "مدير" ثابت)
+     - يمين: محرر التقرير = صاحب الدور (wcStaffRole + wcTeacherName)
+     - يسار: المعتمد = الجهة الإدارية الأعلى
+       • إذا كان الدور = مدير → اللوحة اليسرى تختفي (هو نفسه المعتمد)
+       • غير ذلك → "مدير/ة المدرسة" + wcDirector */
+  var isManager = (tplMode==='mgr');
+  var leftLabel = isManager ? '' : 'مدير المدرسة';
+  var leftName  = isManager ? '' : (wcDirector||'');
+  var rightLabel = wcStaffRole || (ROLE_MAP[tplMode]?ROLE_MAP[tplMode].default:'');
+  var rightName  = wcTeacherName||'';
+  /* للمدير: التوقيع الإلكتروني يظهر في اليمين بدلاً من اليسار */
+  var sigImage = s2Data ? '<img src="'+s2Data+'" style="height:28px;display:block;margin:0 auto 2px">' : '';
 
   var page=document.createElement('div');page.className='a4-page';
   page.style.fontFamily="'"+rFont+"',sans-serif";page.style.fontSize=fs;
@@ -1131,11 +1710,15 @@ function buildPage(num){
   addRow.appendChild(addBtn);content.appendChild(addRow);
 
   var foot=document.createElement('div');foot.className='page-footer';
-  /* يمين الفوتر: اسم المعلم — يختفي تماماً إذا لم يُكتب اسم */
-  var teacherFoot = wcTeacherName
-    ? '<div class="footer-sig">'+(wcStaffRole||'المعلم')+'<div class="sig-line"></div>/ '+wcTeacherName+'</div>'
+  /* محرر التقرير في اليمين (مع التوقيع لو كان مديراً يوقع تقريره) */
+  var rightFoot = (rightLabel || rightName)
+    ? '<div class="footer-sig">'+(isManager && sigImage ? sigImage : '')+rightLabel+'<div class="sig-line"></div>'+rightName+'</div>'
     : '<div></div>';
-  foot.innerHTML=teacherFoot+'<div class="footer-sig">'+(s2Data?'<img src="'+s2Data+'" style="height:28px;display:block;margin:0 auto 2px">':'')+s2l+'<div class="sig-line"></div>'+sig2+'</div>';
+  /* المعتمد في اليسار (لكل الأدوار ما عدا المدير) */
+  var leftFoot = (leftLabel || leftName)
+    ? '<div class="footer-sig">'+(!isManager && sigImage ? sigImage : '')+leftLabel+'<div class="sig-line"></div>'+leftName+'</div>'
+    : '<div></div>';
+  foot.innerHTML=rightFoot+leftFoot;
   page.appendChild(foot);
   var bot=document.createElement('div');bot.className='bot-band';bot.style.background=h.band;page.appendChild(bot);
   return page;
@@ -1147,21 +1730,101 @@ function mkRow(blocks,pnum,si,fs){
     var el=document.createElement('div');el.className='c-block';el.dataset.idx=si+ri;el.dataset.pnum=pnum;
     if(b.isTask){var bid0=String(b.id);initTS(bid0);var lv0=taskState[bid0]?taskState[bid0].level:null;if(lv0==='ex'){el.style.borderColor='#07A869';el.style.boxShadow='inset 0 0 0 2px #07A869';}else if(lv0==='gd'){el.style.borderColor='#0DA9A6';el.style.boxShadow='inset 0 0 0 2px #0DA9A6';}else if(lv0==='bl'){el.style.borderColor='#E8820C';el.style.boxShadow='inset 0 0 0 2px #E8820C';}}
     if(b.type==='img'){
-      var img=document.createElement('img');img.className='block-img';img.src=b.imgSrc||'';img.style.height='160px';el.appendChild(img);
+      /* الصورة الواحدة (للتوافق مع الإصدار القديم) */
+      var img=document.createElement('img');img.className='block-img';img.src=b.imgSrc||'';img.style.cssText='width:100%;height:auto;max-height:240px;object-fit:contain;display:block;background:#f5f5f5';el.appendChild(img);
       var imgCtrl=document.createElement('div');imgCtrl.style.cssText='position:absolute;top:4px;left:4px;display:flex;gap:3px';
       var delI=document.createElement('button');delI.textContent='🗑';delI.title='حذف';delI.className='no-print';delI.style.cssText='background:rgba(200,40,40,.85);color:white;border:none;border-radius:4px;padding:2px 6px;cursor:pointer;font-size:11px';
       delI.onclick=function(e){e.stopPropagation();pushUndo();PB[pnum].splice(si+ri,1);renderPrev();};
       imgCtrl.appendChild(delI);el.appendChild(imgCtrl);
-    } else {
+    }
+    else if(b.type==='imgs' && Array.isArray(b.imgs)){
+      /* كتلة شواهد متعددة: عنوان + شبكة صور بإطار احترافي */
+      var head=document.createElement('div');
+      head.className='cb-head';
+      head.style.cssText='display:flex;align-items:center;background:linear-gradient(90deg,#0DA9A6,#15445A);color:white;padding:7px 12px;font-size:11px;font-weight:700';
+      var titleSpan=document.createElement('span');
+      titleSpan.textContent='📷 '+(b.title||'الشواهد المرئية')+' ('+b.imgs.length+' صور)';
+      titleSpan.style.cssText='flex:1;cursor:text;color:white';
+      titleSpan.ondblclick=function(){
+        var newName=prompt('تعديل عنوان الشواهد:', b.title||'الشواهد المرئية');
+        if(newName!=null && newName.trim()){pushUndo();PB[pnum][si+ri].title=newName.trim();renderPrev();}
+      };
+      head.appendChild(titleSpan);
+      /* زر تعديل التخطيط */
+      var layBtn=document.createElement('button');
+      layBtn.textContent='⊞ '+b.layout;
+      layBtn.title='تغيير التخطيط';
+      layBtn.className='no-print';
+      layBtn.style.cssText='background:rgba(255,255,255,.2);color:white;border:1px solid rgba(255,255,255,.4);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:10px;margin-left:5px';
+      layBtn.onclick=function(e){
+        e.stopPropagation();
+        pushUndo();
+        var layouts=[1,2,3,4];
+        var curIdx=layouts.indexOf(b.layout||2);
+        var newLay=layouts[(curIdx+1)%layouts.length];
+        PB[pnum][si+ri].layout=newLay;
+        renderPrev();
+      };
+      head.appendChild(layBtn);
+      /* زر حذف الكتلة كاملة */
+      var delBtnImgs=document.createElement('button');
+      delBtnImgs.textContent='×';
+      delBtnImgs.title='حذف كتلة الشواهد';
+      delBtnImgs.className='no-print';
+      delBtnImgs.style.cssText='background:rgba(255,80,80,.9);color:white;border:none;border-radius:4px;padding:0 9px;cursor:pointer;font-size:14px;font-weight:900;margin-right:6px;line-height:1.4';
+      delBtnImgs.onclick=function(e){
+        e.stopPropagation();
+        if(confirm('حذف كتلة الشواهد كاملة؟'))
+          { pushUndo(); PB[pnum].splice(si+ri,1); renderPrev(); }
+      };
+      head.appendChild(delBtnImgs);
+      el.appendChild(head);
+      
+      /* شبكة الصور بتخطيط مرن */
+      var grid=document.createElement('div');
+      var lay = b.layout || 2;
+      var cols = lay;
+      if(lay===1) cols=1;
+      grid.style.cssText='display:grid;grid-template-columns:repeat('+cols+',1fr);gap:6px;padding:8px;background:white;border:1.5px solid #0DA9A6;border-top:none;border-bottom-left-radius:6px;border-bottom-right-radius:6px';
+      
+      b.imgs.forEach(function(src, imgIdx){
+        var imgWrap=document.createElement('div');
+        imgWrap.style.cssText='position:relative;border:1px solid #d0e3e3;border-radius:5px;overflow:hidden;background:#fafafa;'+
+          (lay===1 ? 'aspect-ratio:16/9' : 'aspect-ratio:4/3');
+        var imgEl=document.createElement('img');
+        imgEl.src=src;
+        imgEl.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
+        imgWrap.appendChild(imgEl);
+        /* زر حذف صورة فردية (لا تظهر في الطباعة) */
+        var rm=document.createElement('button');
+        rm.textContent='×';
+        rm.className='no-print';
+        rm.style.cssText='position:absolute;top:3px;left:3px;background:rgba(200,40,40,.85);color:white;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:14px;font-weight:900;line-height:1';
+        rm.onclick=(function(idx){return function(e){
+          e.stopPropagation();
+          pushUndo();
+          PB[pnum][si+ri].imgs.splice(idx,1);
+          /* إذا حُذفت آخر صورة، احذف الكتلة كاملة */
+          if(PB[pnum][si+ri].imgs.length===0) PB[pnum].splice(si+ri,1);
+          renderPrev();
+        };})(imgIdx);
+        imgWrap.appendChild(rm);
+        grid.appendChild(imgWrap);
+      });
+      el.appendChild(grid);
+    }
+    else {
       var bv=(b.rptId?fv('f_'+b.rptId):(b.content||'')).replace(/\n/g,'<br>');
       var head=document.createElement('div');head.className='cb-head';
       head.style.display='flex';head.style.alignItems='center';
       var titleSpan=document.createElement('span');titleSpan.textContent='◆ '+(b.title||'');titleSpan.style.cssText='flex:1;cursor:text';
-      titleSpan.ondblclick=function(){
+      var editTitle=function(){
         var cur=titleSpan.textContent.replace('◆ ','');
-        var newName=prompt('اسم القسم:',cur);
+        var newName=prompt('تعديل عنوان المهمة:',cur);
         if(newName&&newName.trim()){pushUndo();PB[pnum][si+ri].title=newName.trim();renderPrev();}
       };
+      titleSpan.ondblclick=editTitle;
+      titleSpan.title='انقر مرتين أو استخدم زر ✏️ لتعديل العنوان';
       head.appendChild(titleSpan);
       /* أزرار المستويات لخلايا المهام */
       if(b.isTask){
@@ -1180,21 +1843,34 @@ function mkRow(blocks,pnum,si,fs){
               }
               var inpLbl=document.createElement('span');inpLbl.textContent=mi.lbl+':';inpLbl.style.cssText='font-size:10px;color:#15445A;font-weight:700;white-space:nowrap';
               var inpNum=document.createElement('input');inpNum.type='text';inpNum.id='inp-'+bid+'-'+mi.id;
+              inpNum.setAttribute('inputmode','numeric');inpNum.maxLength=4;
               inpNum.style.cssText='width:36px;padding:2px 5px;border-radius:4px;border:1px solid #b0c4cf;background:white;color:#15445A;font-family:Tajawal,sans-serif;font-size:11px;font-weight:700;text-align:center;outline:none';
-              inpNum.placeholder='٠٠';
+              inpNum.placeholder='0';
               if(taskState[bid]&&taskState[bid].multiVals&&taskState[bid].multiVals[mi.id])inpNum.value=taskState[bid].multiVals[mi.id];
               inpNum.onclick=function(e){e.stopPropagation();};
-              inpNum.oninput=(function(bi, mId){return function(){if(!taskState[bi])taskState[bi]={level:null,note:'',actions:[],multiVals:{}};if(!taskState[bi].multiVals)taskState[bi].multiVals={};taskState[bi].multiVals[mId]=this.value;};})(bid, mi.id);
+              inpNum.oninput=(function(bi, mId){return function(){
+                /* تنظيف القيمة من غير الأرقام */
+                this.value=this.value.replace(/[^0-9٠-٩]/g,'');
+                if(!taskState[bi])taskState[bi]={level:null,note:'',actions:[],multiVals:{}};
+                if(!taskState[bi].multiVals)taskState[bi].multiVals={};
+                taskState[bi].multiVals[mId]=this.value;
+              };})(bid, mi.id);
               inpWrap.appendChild(inpLbl);inpWrap.appendChild(inpNum);
             });
           } else {
             var inpLbl=document.createElement('span');inpLbl.textContent=b.inputLabel+':';inpLbl.style.cssText='font-size:10px;color:#15445A;font-weight:700;white-space:nowrap';
             var inpNum=document.createElement('input');inpNum.type='text';inpNum.id='inp-'+bid;
+            inpNum.setAttribute('inputmode','numeric');inpNum.maxLength=8;
             inpNum.style.cssText='padding:2px 5px;border-radius:4px;border:1px solid #b0c4cf;background:white;color:#15445A;font-family:Tajawal,sans-serif;font-size:11px;font-weight:700;text-align:center;outline:none';
-            if(tt==='huduri'||tt==='noor'){inpNum.placeholder='٠٠/٠٠';inpNum.style.width='64px';}else{inpNum.placeholder='٠٠';inpNum.style.width='40px';}
+            if(tt==='huduri'||tt==='noor'){inpNum.placeholder='00/00';inpNum.style.width='64px';}else{inpNum.placeholder='0';inpNum.style.width='40px';}
             if(taskState[bid]&&taskState[bid].inputVal)inpNum.value=taskState[bid].inputVal;
             inpNum.onclick=function(e){e.stopPropagation();};
-            inpNum.oninput=(function(bi){return function(){if(!taskState[bi])taskState[bi]={level:null,note:'',actions:[]};taskState[bi].inputVal=this.value;};})(bid);
+            inpNum.oninput=(function(bi){return function(){
+              /* السماح بالأرقام والشرطة المائلة فقط */
+              this.value=this.value.replace(/[^0-9٠-٩\/]/g,'');
+              if(!taskState[bi])taskState[bi]={level:null,note:'',actions:[]};
+              taskState[bi].inputVal=this.value;
+            };})(bid);
             inpWrap.appendChild(inpLbl);inpWrap.appendChild(inpNum);
           }
           head.appendChild(inpWrap);
@@ -1209,11 +1885,19 @@ function mkRow(blocks,pnum,si,fs){
         });
         head.appendChild(lvWrap);
       }
-      var delBtn=document.createElement('button');delBtn.textContent='×';delBtn.title='حذف القسم';
+      var delBtn=document.createElement('button');delBtn.textContent='×';delBtn.title='حذف العنصر';
       delBtn.className='no-print del-block-btn';delBtn.style.cssText='background:#fee;color:#c44;border:1.5px solid #f5a5a5;border-radius:5px;padding:0 8px;cursor:pointer;font-size:18px;font-weight:900;margin-right:6px;line-height:1.2;min-width:26px;min-height:26px;display:flex;align-items:center;justify-content:center;transition:all .15s';
       delBtn.onmouseover=function(){this.style.background='#c44';this.style.color='white';this.style.borderColor='#c44';};
       delBtn.onmouseout=function(){this.style.background='#fee';this.style.color='#c44';this.style.borderColor='#f5a5a5';};
       delBtn.onclick=function(e){e.stopPropagation();if(confirm('هل تريد حذف هذا العنصر؟'))delBlock(pnum,si+ri);};
+
+      /* زر تعديل العنوان ✏️ */
+      var editBtn=document.createElement('button');editBtn.textContent='✏️';editBtn.title='تعديل عنوان المهمة';
+      editBtn.className='no-print edit-block-btn';editBtn.style.cssText='background:#e8f4fd;color:#15445A;border:1.5px solid #b0c4cf;border-radius:5px;padding:0 7px;cursor:pointer;font-size:13px;margin-right:6px;line-height:1.2;min-width:26px;min-height:26px;display:flex;align-items:center;justify-content:center;transition:all .15s';
+      editBtn.onmouseover=function(){this.style.background='#15445A';this.style.borderColor='#15445A';};
+      editBtn.onmouseout=function(){this.style.background='#e8f4fd';this.style.borderColor='#b0c4cf';};
+      editBtn.onclick=function(e){e.stopPropagation();editTitle();};
+      head.appendChild(editBtn);
       head.appendChild(delBtn);
       var body=document.createElement('div');body.className='cb-body';body.spellcheck=false;body.style.fontSize=fs;
       if(b.isTask){
@@ -1237,12 +1921,39 @@ function mkRow(blocks,pnum,si,fs){
   return row;
 }
 
-function addPage(){extraPages++;if(!PB[1+extraPages])PB[1+extraPages]=[];renderPrev();}
+function addPage(){pushUndo();extraPages++;if(!PB[1+extraPages])PB[1+extraPages]=[];renderPrev();}
 
 function generateSardAndStats() {
   pushUndo();
   var school = wcSchool || document.getElementById('wc-school').value || 'المدرسة';
   var date = document.getElementById('wc-date').textContent;
+  /* مصدر المسمى = wcStaffRole (الذي تم اختياره من قائمة دور tplMode فقط — لا خلط) */
+  var roleLabel = wcStaffRole || (ROLE_MAP[tplMode]?ROLE_MAP[tplMode].default:'منسوب المدرسة');
+  /* صاحب التقرير = wcTeacherName حصراً (المعتمد wcDirector ليس صاحب التقرير) */
+  var personName = wcTeacherName || '';
+  var directorName = wcDirector || '';
+  var roleTitle = ROLE_MAP[tplMode] ? ROLE_MAP[tplMode].title : 'تقرير المهام اليومية';
+
+  /* ✨ حذف صفحات السرد والإحصاء السابقة لمنع التكرار */
+  Object.keys(PB).forEach(function(p){
+    if(PB[p] && Array.isArray(PB[p])){
+      PB[p] = PB[p].filter(function(b){
+        return b.title !== 'الاعتماد والسرد النصي لمجريات اليوم'
+            && b.title !== 'التقرير الإحصائي'
+            && b.title !== 'الخلاصة والتوصيات';
+      });
+    }
+  });
+  /* إعادة بناء extraPages بدقة بعد الحذف */
+  var maxPage = 1;
+  Object.keys(PB).forEach(function(p){
+    var n = parseInt(p);
+    if(!isNaN(n) && PB[p] && PB[p].length>0 && n>maxPage) maxPage=n;
+  });
+  /* حذف الصفحات الفارغة في النهاية */
+  for(var p=maxPage+1; p<=1+extraPages; p++){ delete PB[p]; }
+  extraPages = maxPage - 1;
+  if(extraPages < 1) extraPages = 1;
 
   var getLvl = function(bid) {
     if(!taskState[bid] || !taskState[bid].level) return 'غير مقيم';
@@ -1253,11 +1964,11 @@ function generateSardAndStats() {
   };
   var getAct = function(bid) {
     if(!taskState[bid] || !taskState[bid].actions || taskState[bid].actions.length===0) return '';
-    return ' (الإجراءات المتخذة: ' + taskState[bid].actions.join('، ') + ')';
+    return ' <em>(الإجراءات المتخذة: ' + taskState[bid].actions.join('، ') + ')</em>';
   };
   var getNote = function(bid) {
     if(!taskState[bid] || !taskState[bid].note) return '';
-    return ' ملاحظة: ' + taskState[bid].note;
+    return ' <em>(ملاحظة: ' + taskState[bid].note + ')</em>';
   };
   var getInp = function(bid) {
     if(!taskState[bid] || !taskState[bid].inputVal) return '٠';
@@ -1268,24 +1979,67 @@ function generateSardAndStats() {
     return taskState[bid].multiVals[k];
   };
 
-  var narrativeHtml = '<div style="line-height:2.2; font-size:14px; text-align:justify;">' +
-    '<p><strong>بسم الله الرحمن الرحيم</strong></p>' +
-    '<p>إنه في يوم <strong>' + date + '</strong>، وخلال سير اليوم الدراسي في مدرسة <strong>' + school + '</strong>، تم رصد وتقييم الأداء العام وفقاً للمهام اليومية، وقد تبين ما يلي:</p>' +
-    '<p>خلال اليوم الدراسي وبالنظر لفعاليات الاصطفاف الصباحي، فقد كان تفاعل الطلاب بمستوى <strong>(' + getLvl('1001') + ')</strong>' + getNote('1001') + '، بينما سُجل تفاعل المعلمين بمستوى <strong>(' + getLvl('1002') + ')</strong>' + getNote('1002') + '.</p>' +
-    '<p>وفيما يخص انضباط الهيئة التعليمية والإدارية (عبر نظام حضوري)، فقد تم حصر حضور <strong>(' + getM('1003','att') + ')</strong>، وغياب <strong>(' + getM('1003','abs') + ')</strong>، ليكون التقييم العام للانضباط بمستوى <strong>(' + getLvl('1003') + ')</strong>.' + getAct('1003') + '</p>' +
-    '<p>أما على صعيد الانضباط اليومي للطلاب (عبر نظام نور)، فقد تم رصد حضور <strong>(' + getM('1004','att') + ')</strong> طالباً، وغياب <strong>(' + getM('1004','abs') + ')</strong> طالباً، وجاء مستوى الانضباط <strong>(' + getLvl('1004') + ')</strong>.' + getAct('1004') + '</p>' +
-    '<p>وفي إطار التواصل مع الأسرة والمجتمع (مواعيد مدرستي)، تم التعامل مع عدد <strong>(' + getInp('1005') + ')</strong> حجوزات/مواعيد، وكان مستوى النشاط <strong>(' + getLvl('1005') + ')</strong>.' + getAct('1005') + '</p>' +
-    '<p>وبمتابعة إجراءات الموارد البشرية (نظام فارس)، تم رصد عدد <strong>(' + getInp('1006') + ')</strong> إجراءً، وحالة الإنجاز تُعد <strong>(' + getLvl('1006') + ')</strong>. كما تم التعامل مع الدعم الموحد بعدد <strong>(' + getInp('1007') + ')</strong> تذاكر، ومستوى المعالجة الحالي <strong>(' + getLvl('1007') + ')</strong>.</p>' +
-    '<p>ومن خلال المرور والمتابعة لمهام الإشراف والمناوبة وحصص الاحتياط، فقد كانت التغطية بمستوى <strong>(' + getLvl('1008') + ')</strong>.' + getAct('1008') + '</p>' +
-    '<p>وفيما يتعلق بعمليات التدريس والزيارات الصفية، فقد تم تقييمها بمستوى <strong>(' + getLvl('1009') + ')</strong>.' + getAct('1009') + '</p>' +
-    '<p>وأخيراً، بشأن الاجتماع بلجان المدرسة، فإن حالة الاجتماعات تُعد <strong>(' + getLvl('1010') + ')</strong>.' + getAct('1010') + '</p>' +
-    '<p>هذا ما لزم تدوينه لتوثيق سير العمل اليومي، والله الموفق.</p>' +
-    '</div>';
+  /* ✨ جمع كل المهام من PB ديناميكياً */
+  var allTasks = [];
+  Object.keys(PB).forEach(function(p){
+    (PB[p]||[]).forEach(function(b){
+      if(b.isTask) allTasks.push(b);
+    });
+  });
 
+  /* عبارات افتتاحية متنوعة لتجنب نمطية السرد */
+  var openers = [
+    'وفيما يتعلق بـ ', 'وفي ما يخص ', 'وعلى صعيد ', 'وفي إطار ',
+    'وفيما يتصل بـ ', 'وأما عن ', 'وبالنسبة إلى ', 'وفي شأن '
+  ];
+  var pickOpener = function(i){ return openers[i % openers.length]; };
+
+  /* ✨ سرد احترافي يعكس الدور بدقة (لا يُذكر فيه مسمى آخر) */
+  var nameClause = personName ? ' الأخ/ة ' + personName : '';
+  var narrativeHtml = '<div style="line-height:2.3; font-size:14px; text-align:justify; color:#1a2a35;">' +
+    '<p style="text-align:center; font-weight:800; font-size:15px; margin-bottom:12px;">بسم الله الرحمن الرحيم</p>' +
+    '<p style="text-indent:25px;">الحمد لله رب العالمين، والصلاة والسلام على أشرف الأنبياء والمرسلين، نبينا محمد وعلى آله وصحبه أجمعين، أما بعد:</p>' +
+    '<p style="text-indent:25px;">إنه في يوم <strong>' + date + '</strong>، وفي إطار سير العمل اليومي بـ<strong> ' + school + '</strong>، قام <strong>' + roleLabel + nameClause + '</strong> بأداء المهام اليومية المنوطة بـ<strong>' + roleLabel + '</strong> وفقاً للدليل التنظيمي للمدارس (1446هـ)، وفيما يلي رصد دقيق لما تم إنجازه:</p>';
+
+  allTasks.forEach(function(b, i){
+    var bid = String(b.id);
+    var lvl = getLvl(bid);
+    var note = getNote(bid);
+    var act = getAct(bid);
+    var op = pickOpener(i);
+    var sentence = '';
+    if(b.multiInputs){
+      var parts = b.multiInputs.map(function(mi){
+        return '<strong>' + mi.lbl + ': (' + getM(bid, mi.id) + ')</strong>';
+      });
+      sentence = op + '"<strong>' + b.title + '</strong>"، تم رصد ' + parts.join('، ') + '، وجاء التقييم بمستوى <strong>(' + lvl + ')</strong>';
+    } else if(b.inputLabel){
+      sentence = op + '"<strong>' + b.title + '</strong>"، فقد بلغ <strong>(' + getInp(bid) + ')</strong> ' + b.inputLabel + '، بمستوى أداء <strong>(' + lvl + ')</strong>';
+    } else {
+      sentence = op + '"<strong>' + b.title + '</strong>"، فقد كان مستوى الأداء <strong>(' + lvl + ')</strong>';
+    }
+    sentence += '.' + note + act;
+    narrativeHtml += '<p style="text-indent:25px; margin-bottom:8px;">' + sentence + '</p>';
+  });
+
+  narrativeHtml += '<p style="text-indent:25px; margin-top:14px;">هذا ما تم رصده وتوثيقه من مجريات اليوم، وقد جرى ذلك في إطار الحرص على جودة العملية التعليمية، والالتزام بمتطلبات المهام اليومية لـ<strong>' + roleLabel + '</strong>.</p>';
+  narrativeHtml += '<p style="text-indent:25px;">والله ولي التوفيق،،،</p>';
+  /* تذييل التوقيع — يعكس بدقة من حرر التقرير ومن اعتمده */
+  narrativeHtml += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:30px;text-align:center;font-size:13px;">';
+  narrativeHtml += '<div><strong>محرر التقرير</strong><br>' + roleLabel + '<br>' + (personName?personName:'.................') + '<br><span style="display:inline-block;border-bottom:1px solid #999;width:140px;margin-top:18px;"></span></div>';
+  if(directorName || tplMode!=='mgr'){
+    narrativeHtml += '<div><strong>المعتمد</strong><br>مدير المدرسة<br>' + (directorName?directorName:'.................') + '<br><span style="display:inline-block;border-bottom:1px solid #999;width:140px;margin-top:18px;"></span></div>';
+  } else {
+    narrativeHtml += '<div></div>';
+  }
+  narrativeHtml += '</div></div>';
+
+  /* ✨ الإحصاء العام للمستويات */
   var counts = { ex: 0, gd: 0, bl: 0, total: 0 };
-  ['1001','1002','1003','1004','1005','1006','1007','1008','1009','1010'].forEach(function(id) {
-    if(taskState[id] && taskState[id].level) {
-      counts[taskState[id].level]++;
+  allTasks.forEach(function(b){
+    var bid = String(b.id);
+    if(taskState[bid] && taskState[bid].level) {
+      counts[taskState[bid].level]++;
       counts.total++;
     }
   });
@@ -1293,60 +2047,105 @@ function generateSardAndStats() {
   var pGd = counts.total ? Math.round((counts.gd/counts.total)*100) : 0;
   var pBl = counts.total ? Math.round((counts.bl/counts.total)*100) : 0;
 
-  var tAtt = parseInt(getM('1003','att'))||0;
-  var tAbs = parseInt(getM('1003','abs'))||0;
-  var tTotal = tAtt + tAbs;
-  var ptAtt = tTotal ? Math.round((tAtt/tTotal)*100) : 0;
-  var ptAbs = tTotal ? Math.round((tAbs/tTotal)*100) : 0;
+  /* ✨ كروت إحصائية فرعية للحضور/الغياب */
+  /* دالة تحويل الأرقام الهندية إلى عربية */
+  var toEN = function(s){
+    if(s==null) return '0';
+    return String(s).replace(/[٠-٩]/g,function(d){return '٠١٢٣٤٥٦٧٨٩'.indexOf(d);});
+  };
+  var subCardsHtml = '';
+  var subCards = [];
+  allTasks.forEach(function(b){
+    if(b.multiInputs && b.multiInputs.length>=2){
+      var bid = String(b.id);
+      var v1 = parseInt(toEN(getM(bid, b.multiInputs[0].id)))||0;
+      var v2 = parseInt(toEN(getM(bid, b.multiInputs[1].id)))||0;
+      var total = v1 + v2;
+      var p1 = total ? Math.round((v1/total)*100) : 0;
+      var p2 = total ? Math.round((v2/total)*100) : 0;
+      subCards.push({title:b.title, l1:b.multiInputs[0].lbl, l2:b.multiInputs[1].lbl, v1:v1, v2:v2, p1:p1, p2:p2, total:total});
+    }
+  });
+  if(subCards.length>0){
+    var cols = subCards.length===1 ? '1fr' : '1fr 1fr';
+    subCardsHtml = '<div style="display:grid; grid-template-columns:'+cols+'; gap:25px; margin-top:20px;">';
+    subCards.forEach(function(c){
+      subCardsHtml += '<div style="border:1.5px solid #e0e0e0; border-radius:12px; padding:20px 15px; text-align:center; background:white; box-shadow:0 4px 15px rgba(0,0,0,0.03);">' +
+        '<div style="font-size:13px; font-weight:800; color:#15445A; margin-bottom:10px;">' + c.title + '</div>' +
+        '<div style="font-size:12px; color:#555; margin-bottom:12px; font-weight:700;">إجمالي: ' + c.total + '</div>' +
+        '<div style="display:flex; height:32px; border-radius:16px; overflow:hidden; background:#eee; box-shadow:inset 0 2px 5px rgba(0,0,0,0.05);">' +
+          '<div style="width:' + c.p1 + '%; background:#07A869; display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:800;">' + (c.p1>0?c.p1+'%':'') + '</div>' +
+          '<div style="width:' + c.p2 + '%; background:#e8820c; display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:800;">' + (c.p2>0?c.p2+'%':'') + '</div>' +
+        '</div>' +
+        '<div style="display:flex; justify-content:center; gap:20px; margin-top:14px; font-size:13px;">' +
+          '<span style="color:#07A869; font-weight:800;">' + c.l1 + ': ' + c.v1 + '</span>' +
+          '<span style="color:#e8820c; font-weight:800;">' + c.l2 + ': ' + c.v2 + '</span>' +
+        '</div>' +
+      '</div>';
+    });
+    subCardsHtml += '</div>';
+  }
 
-  var sAtt = parseInt(getM('1004','att'))||0;
-  var sAbs = parseInt(getM('1004','abs'))||0;
-  var sTotal = sAtt + sAbs;
-  var psAtt = sTotal ? Math.round((sAtt/sTotal)*100) : 0;
-  var psAbs = sTotal ? Math.round((sAbs/sTotal)*100) : 0;
+  /* ✨ توصيات تربوية ذكية مبنية على نسبة الأداء (تختلف بحسب الدور) */
+  var recHtml = '';
+  if(counts.total > 0){
+    var perfLevel = '';
+    var perfClass = '';
+    var recommendations = [];
+    if(pEx >= 70){
+      perfLevel = 'أداء متميز ومتفوق';
+      perfClass = 'background:#e8f9ef;border-color:#07A869;color:#07A869;';
+      recommendations = [
+        'الاستمرار على نفس النهج والمحافظة على هذا المستوى من الأداء.',
+        'توثيق الممارسات المتميزة ونشرها بين زملاء العمل.',
+        'ترشيح الجهود البارزة للتكريم والإشادة الرسمية.'
+      ];
+    } else if(pEx + pGd >= 60){
+      perfLevel = 'أداء جيد بحاجة إلى تطوير في بعض الجوانب';
+      perfClass = 'background:#e8f5fa;border-color:#0DA9A6;color:#0DA9A6;';
+      recommendations = [
+        'تعزيز الجوانب التي حققت مستويات عالية مع متابعة أوجه القصور.',
+        'وضع خطة تحسين قصيرة المدى للمهام بمستوى متوسط.',
+        'تكثيف التواصل مع المختصين لرفع كفاءة الأداء.'
+      ];
+    } else {
+      perfLevel = 'أداء يحتاج إلى تدخل وتطوير';
+      perfClass = 'background:#fdf3ea;border-color:#E8820C;color:#E8820C;';
+      recommendations = [
+        'عقد اجتماع لمراجعة أوجه القصور ووضع خطة علاجية.',
+        'الرفع للجهات المختصة لطلب الدعم اللازم.',
+        'تكثيف المتابعة اليومية للمهام الحرجة.',
+        'إعداد تقرير تفصيلي بالمعوقات وإجراءات المعالجة.'
+      ];
+    }
+    recHtml = '<div style="margin-top:20px; padding:18px; border:2px solid; border-radius:12px;' + perfClass + '">' +
+      '<div style="font-size:15px; font-weight:800; margin-bottom:8px;">📊 الخلاصة: ' + perfLevel + '</div>' +
+      '<div style="font-size:13px; font-weight:700; margin-bottom:10px; color:#15445A;">التوصيات:</div>' +
+      '<ul style="margin:0; padding-right:20px; font-size:13px; line-height:1.9; color:#333;">';
+    recommendations.forEach(function(r){ recHtml += '<li>' + r + '</li>'; });
+    recHtml += '</ul></div>';
+  }
 
   var statsHtml = '<div style="font-family: Tajawal, sans-serif;">' +
-    '<div style="margin-bottom:35px; padding:20px; background:#fcfcfc; border-radius:12px; border:1px solid #eee;">' +
-      '<div style="font-size:16px; font-weight:800; margin-bottom:12px; color:#15445A;">نسبة التقييم لمهام اليوم</div>' +
-      '<div style="display:flex; height:36px; border-radius:18px; overflow:hidden; background:#eee; box-shadow:inset 0 2px 5px rgba(0,0,0,0.05);">' +
-        '<div style="width:' + pEx + '%; background:#07A869; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (pEx>0?pEx+'%':'') + '</div>' +
-        '<div style="width:' + pGd + '%; background:#0DA9A6; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (pGd>0?pGd+'%':'') + '</div>' +
-        '<div style="width:' + pBl + '%; background:#E8820C; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (pBl>0?pBl+'%':'') + '</div>' +
+    '<div style="margin-bottom:25px; padding:18px; background:#fcfcfc; border-radius:12px; border:1px solid #eee;">' +
+      '<div style="font-size:15px; font-weight:800; margin-bottom:12px; color:#15445A;">📊 نسبة التقييم لمهام اليوم — ' + roleLabel + '</div>' +
+      '<div style="display:flex; height:32px; border-radius:16px; overflow:hidden; background:#eee; box-shadow:inset 0 2px 5px rgba(0,0,0,0.05);">' +
+        '<div style="width:' + pEx + '%; background:#07A869; display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:800;">' + (pEx>0?pEx+'%':'') + '</div>' +
+        '<div style="width:' + pGd + '%; background:#0DA9A6; display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:800;">' + (pGd>0?pGd+'%':'') + '</div>' +
+        '<div style="width:' + pBl + '%; background:#E8820C; display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:800;">' + (pBl>0?pBl+'%':'') + '</div>' +
       '</div>' +
-      '<div style="display:flex; justify-content:center; gap:25px; margin-top:15px; font-size:14px; font-weight:600; color:#555;">' +
-        '<span style="display:flex; align-items:center; gap:6px;"><span style="width:14px; height:14px; background:#07A869; border-radius:50%;"></span> مستوى عالٍ</span>' +
-        '<span style="display:flex; align-items:center; gap:6px;"><span style="width:14px; height:14px; background:#0DA9A6; border-radius:50%;"></span> مستوى متوسط</span>' +
-        '<span style="display:flex; align-items:center; gap:6px;"><span style="width:14px; height:14px; background:#E8820C; border-radius:50%;"></span> يحتاج تحسين</span>' +
+      '<div style="display:flex; justify-content:center; gap:20px; margin-top:14px; font-size:13px; font-weight:600; color:#555; flex-wrap:wrap;">' +
+        '<span style="display:flex; align-items:center; gap:6px;"><span style="width:14px; height:14px; background:#07A869; border-radius:50%;"></span> ✓✓ مستوى عالٍ (' + counts.ex + ')</span>' +
+        '<span style="display:flex; align-items:center; gap:6px;"><span style="width:14px; height:14px; background:#0DA9A6; border-radius:50%;"></span> ✓ مستوى متوسط (' + counts.gd + ')</span>' +
+        '<span style="display:flex; align-items:center; gap:6px;"><span style="width:14px; height:14px; background:#E8820C; border-radius:50%;"></span> ⚠ يحتاج تحسين (' + counts.bl + ')</span>' +
       '</div>' +
+      '<div style="text-align:center; margin-top:13px; font-size:12px; color:#777; font-weight:600;">إجمالي المهام المقيّمة: ' + counts.total + ' من أصل ' + allTasks.length + '</div>' +
     '</div>' +
-    '<div style="display:grid; grid-template-columns:1fr 1fr; gap:25px; margin-top:20px;">' +
-      '<div style="border:1.5px solid #e0e0e0; border-radius:12px; padding:25px 15px; text-align:center; background:white; box-shadow:0 4px 15px rgba(0,0,0,0.03);">' +
-        '<div style="font-size:16px; font-weight:800; color:#15445A; margin-bottom:12px;">انضباط المعلمين (حضوري)</div>' +
-        '<div style="font-size:13px; color:#555; margin-bottom:15px; font-weight:700;">إجمالي: ' + tTotal + '</div>' +
-        '<div style="display:flex; height:36px; border-radius:18px; overflow:hidden; background:#eee; box-shadow:inset 0 2px 5px rgba(0,0,0,0.05);">' +
-          '<div style="width:' + ptAtt + '%; background:#07A869; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (ptAtt>0?ptAtt+'%':'') + '</div>' +
-          '<div style="width:' + ptAbs + '%; background:#e8820c; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (ptAbs>0?ptAbs+'%':'') + '</div>' +
-        '</div>' +
-        '<div style="display:flex; justify-content:center; gap:20px; margin-top:20px; font-size:14px;">' +
-          '<span style="color:#07A869; font-weight:800;">حضور: ' + tAtt + '</span>' +
-          '<span style="color:#e8820c; font-weight:800;">غياب: ' + tAbs + '</span>' +
-        '</div>' +
-      '</div>' +
-      '<div style="border:1.5px solid #e0e0e0; border-radius:12px; padding:25px 15px; text-align:center; background:white; box-shadow:0 4px 15px rgba(0,0,0,0.03);">' +
-        '<div style="font-size:16px; font-weight:800; color:#15445A; margin-bottom:12px;">انضباط الطلاب (نور)</div>' +
-        '<div style="font-size:13px; color:#555; margin-bottom:15px; font-weight:700;">إجمالي: ' + sTotal + '</div>' +
-        '<div style="display:flex; height:36px; border-radius:18px; overflow:hidden; background:#eee; box-shadow:inset 0 2px 5px rgba(0,0,0,0.05);">' +
-          '<div style="width:' + psAtt + '%; background:#07A869; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (psAtt>0?psAtt+'%':'') + '</div>' +
-          '<div style="width:' + psAbs + '%; background:#e8820c; display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:800;">' + (psAbs>0?psAbs+'%':'') + '</div>' +
-        '</div>' +
-        '<div style="display:flex; justify-content:center; gap:20px; margin-top:20px; font-size:14px;">' +
-          '<span style="color:#07A869; font-weight:800;">حضور: ' + sAtt + '</span>' +
-          '<span style="color:#e8820c; font-weight:800;">غياب: ' + sAbs + '</span>' +
-        '</div>' +
-      '</div>' +
-    '</div>' +
+    subCardsHtml +
+    recHtml +
   '</div>';
 
+  /* إضافة صفحة السرد */
   extraPages++;
   var narPageNum = 1 + extraPages;
   if(!PB[narPageNum]) PB[narPageNum] = [];
@@ -1358,6 +2157,7 @@ function generateSardAndStats() {
     type: 'text'
   });
 
+  /* إضافة صفحة الإحصاء */
   extraPages++;
   var statPageNum = 1 + extraPages;
   if(!PB[statPageNum]) PB[statPageNum] = [];
@@ -1369,7 +2169,7 @@ function generateSardAndStats() {
     type: 'text'
   });
 
-  toast('تم توليد التقرير السردي والإحصائي بنجاح!');
+  toast('✅ تم توليد السرد والإحصاء بنجاح');
   lu();
 }
 
